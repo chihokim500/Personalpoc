@@ -1,31 +1,35 @@
 <title>Requirements Quality Gate</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-  /* Deliberate single dark theme, styled after the DashStack admin dashboard
-     UI kit (Figma) the user referenced — dark navy surfaces, bright accent
-     chips, pill badges. Not responsive to viewer light/dark preference. */
+  /* Single light theme (switched from dark on 2026-09-29: the page is a long review document —
+     requirements, ER questions, tables — so light surfaces read better). Brand hues the user chose
+     (accent #4880FF, Value #4AD991, Risk #FF9066, [값] #FEC53D) are kept as fills/borders; *-ink
+     tokens are darker shades of the same hues for text on light backgrounds. */
   :root {
-    --bg: #12151f;
-    --surface: #1a1f2e;
-    --surface-2: #232a3d;
-    --ink: #f2f4f8;
-    --ink-dim: #8b93a7;
-    --border: #2b3244;
+    --bg: #f6f8fb;
+    --surface: #ffffff;
+    --surface-2: #f2f4f7;
+    --ink: #202632;
+    --ink-dim: #667085;
+    --border: #dce2ea;
     --accent: #4880ff;
-    --accent-ink: #7ea6ff;
-    --accent-soft: #1c2c4f;
-    --critical: #ff6b6b;
-    --critical-soft: #3a2020;
-    --high: #ffb648;
-    --high-soft: #3a2c14;
-    --low: #8b93a7;
-    --low-soft: #232a3d;
+    --accent-ink: #2f5fd0;
+    --accent-soft: #e8efff;
+    --critical: #d92d20;
+    --critical-soft: #fee4e2;
+    --high: #b45309;
+    --high-soft: #fef0dc;
+    --low: #667085;
+    --low-soft: #f2f4f7;
     --value: #4ad991;
-    --value-soft: #163526;
+    --value-ink: #0e7a4b;
+    --value-soft: #ddf7ea;
     --risk: #ff9066;
-    --risk-soft: #3a2418;
+    --risk-ink: #b8431a;
+    --risk-soft: #ffe9df;
     --gold: #fec53d;
-    --gold-soft: #3d2f10;
+    --gold-ink: #7a5200;
+    --gold-soft: #fff1c7;
     --radius: 18px;
   }
 
@@ -39,18 +43,18 @@
   }
   .mono { font-family: 'IBM Plex Mono', 'Consolas', monospace; }
   a { color: var(--accent-ink); }
-  button { font-family: inherit; }
+  button, select, input { font-family: inherit; }
 
   .wrap { max-width: 1180px; margin: 0 auto; padding-block: 24px 72px; }
 
   /* ---- nav ---- */
   .topnav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
   .brand { display: flex; align-items: baseline; gap: 8px; cursor: pointer; }
-  .brand-mark { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 17px; letter-spacing: -0.01em; }
+  .brand-mark { font-weight: 600; font-size: 17px; letter-spacing: -0.01em; }
   .brand-sub { font-size: 13px; color: var(--ink); }
   .nav-actions { display: flex; gap: 8px; }
   .btn {
-    font-family: 'IBM Plex Mono', monospace; font-size: 14.5px; border-radius: 8px; padding: 8px 14px;
+    font-size: 14.5px; border-radius: 8px; padding: 8px 14px;
     border: 1px solid var(--border); background: var(--surface); color: var(--ink); cursor: pointer;
   }
   .btn:hover { border-color: var(--accent); color: var(--accent-ink); }
@@ -60,32 +64,16 @@
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 18px; }
 
-  .info-tip {
-    position: relative; display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px; border-radius: 50%; background: #ffffff; border: 1px solid #ffffff;
-    color: #6b7280; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-style: italic;
-    cursor: default; flex: none;
-  }
-  .info-tip:hover, .info-tip:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
-  .info-tip .tip-bubble {
-    visibility: hidden; opacity: 0; position: absolute; top: 130%; right: 0; width: 270px;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px;
-    font-family: 'IBM Plex Sans KR', sans-serif; font-size: 13px; font-style: normal; color: var(--ink);
-    line-height: 1.5; box-shadow: 0 6px 18px rgba(0,0,0,.14); transition: opacity .12s ease; z-index: 20;
-    text-align: left;
-  }
-  .info-tip:hover .tip-bubble, .info-tip:focus-visible .tip-bubble { visibility: visible; opacity: 1; }
-
   /* ---- hero ---- */
   .hero { margin-bottom: 34px; }
-  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
+  .eyebrow { font-size: 13.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
   h1 { font-size: clamp(28px, 4.4vw, 40px); margin: 0 0 12px; letter-spacing: -0.01em; }
   .hero p.lede { color: var(--ink); max-width: 68ch; margin: 0 0 20px; font-size: 17px; }
   @media (min-width: 1000px) { .hero h1, .hero p.lede { white-space: nowrap; max-width: none; } }
 
   .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
   .flow-step {
-    font-family: 'IBM Plex Mono', monospace; font-size: 14.5px; background: var(--surface);
+    font-size: 14.5px; background: var(--surface);
     border: 1px solid var(--border); border-radius: 999px; padding: 7px 13px; white-space: nowrap;
   }
   .flow-arrow { color: var(--ink); font-size: 16px; }
@@ -93,7 +81,7 @@
   .principle {
     font-size: 15px; color: var(--ink); border-left: 3px solid var(--accent); padding: 8px 0 8px 12px;
   }
-  .principle code { background: var(--surface-2); border-radius: 4px; padding: 1px 6px; font-size: 1em; color: var(--ink); }
+  .principle code { font-family: inherit; background: var(--surface-2); border-radius: 4px; padding: 1px 6px; font-size: 1em; color: var(--ink); }
 
   /* ---- case cards ---- */
   .section-title { font-size: 15.5px; font-weight: 600; margin: 0 0 4px; }
@@ -104,35 +92,36 @@
   .case-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 18px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 10px;
-    transition: border-color .15s ease, transform .15s ease; box-shadow: 0 4px 14px rgba(0,0,0,.28);
+    transition: border-color .15s ease, transform .15s ease; box-shadow: 0 1px 3px rgba(16,24,40,.08);
     color: var(--ink); font-family: inherit;
   }
   .case-card:hover { border-color: var(--accent); transform: translateY(-2px); }
   .case-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .case-type-badge {
-    display: inline-block; align-self: flex-start; font-family: 'IBM Plex Mono', monospace; font-size: 12px;
-    font-weight: 600; letter-spacing: .04em; border-radius: 999px; padding: 3px 10px;
+    display: inline-block; align-self: flex-start; font-size: 12px;
+    font-weight: 600; letter-spacing: .04em; border-radius: 4px; padding: 3px 10px;
   }
-  .case-type-value { background: var(--value-soft); color: var(--value); }
-  .case-type-risk { background: var(--risk-soft); color: var(--risk); }
+  .case-type-value { background: var(--value-soft); color: var(--value-ink); }
+  .case-type-risk { background: var(--risk-soft); color: var(--risk-ink); }
   .case-title { font-size: 18px; font-weight: 600; margin: 0; }
   .case-row { font-size: 14.5px; }
   .case-row .label {
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+    font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
     color: var(--ink); display: flex; align-items: center; gap: 5px; margin-bottom: 3px;
   }
   .case-row .val { color: var(--ink); }
   .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag {
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--surface-2); color: var(--ink);
+    font-size: 12px; background: var(--surface-2); color: var(--ink);
     border-radius: 999px; padding: 3px 9px;
   }
-  .card-cta { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; color: var(--accent-ink); margin-top: 2px; }
+  .card-cta { font-size: 13.5px; color: var(--accent-ink); margin-top: 2px; }
 
   /* ---- priority badges ---- */
   .badge {
-    display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600;
-    border-radius: 999px; padding: 2px 9px; letter-spacing: .02em; white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
+    display: inline-block; font-size: 12px; font-weight: 600;
+    border-radius: 4px; padding: 2px 9px; letter-spacing: .02em; white-space: nowrap;
   }
   .badge-p0 { background: var(--critical-soft); color: var(--critical); }
   .badge-p1 { background: var(--high-soft); color: var(--high); }
@@ -151,7 +140,7 @@
   .case-header h2 { font-size: 27px; margin: 6px 0 14px; }
   .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin-bottom: 14px; }
   @media (max-width: 600px) { .meta-grid { grid-template-columns: 1fr; } }
-  .meta-item .label { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 3px; }
+  .meta-item .label { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 3px; }
   .meta-item .val { font-size: 15.5px; }
   .meta-item .val.placeholder { color: var(--ink-dim); font-style: italic; }
   .summary-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; font-size: 15.5px; margin-bottom: 6px; }
@@ -167,7 +156,7 @@
   .req-body { padding: 0 18px 20px; border-top: 1px solid var(--border); }
 
   .stage { padding-top: 20px; }
-  .stage-num { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--accent-ink); letter-spacing: .04em; text-transform: uppercase; margin: 0 0 8px; }
+  .stage-num { font-size: 12.5px; color: var(--accent-ink); letter-spacing: .04em; text-transform: uppercase; margin: 0 0 8px; }
   .stage-note { font-size: 13px; color: var(--ink); font-style: italic; margin: 4px 0 0; }
 
   .virtual-req { background: var(--surface-2); border-radius: 8px; padding: 12px 14px; font-size: 16px; }
@@ -176,7 +165,7 @@
   .subcard-full { margin-top: 10px; }
   @media (max-width: 760px) { .subcard-grid { grid-template-columns: 1fr; } }
   .subcard { border: 1px solid var(--border); border-radius: 8px; padding: 11px 12px; }
-  .subcard h4 { font-size: 13px; font-family: 'IBM Plex Mono', monospace; letter-spacing: .03em; text-transform: uppercase; color: var(--ink); margin: 0 0 8px; }
+  .subcard h4 { font-size: 13px; letter-spacing: .03em; text-transform: uppercase; color: var(--ink); margin: 0 0 8px; }
   .subcard ul { margin: 0; padding-left: 16px; font-size: 15px; }
   .subcard li { margin-bottom: 7px; }
   .subcard li .badge { margin-right: 5px; }
@@ -187,12 +176,12 @@
   .ba-block { border-radius: 8px; padding: 12px 14px; font-size: 15.5px; }
   .ba-before { background: var(--surface-2); }
   .ba-after { background: var(--accent-soft); border: 1px solid var(--accent); }
-  .ba-label { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink); margin-bottom: 6px; display: block; }
+  .ba-label { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink); margin-bottom: 6px; display: block; }
   .ba-arrow { text-align: center; color: var(--ink); font-size: 15px; }
 
   .ph { border-radius: 4px; padding: 0 3px; }
-  .ph-value { background: var(--gold-soft); color: var(--gold); font-family: 'IBM Plex Mono', monospace; font-size: 1em; }
-  .ph-generic { background: var(--gold-soft); color: var(--gold); font-family: 'IBM Plex Mono', monospace; font-size: 1em; }
+  .ph-value { font-family: 'IBM Plex Mono', monospace; background: var(--gold-soft); color: var(--gold-ink); font-size: 1em; }
+  .ph-generic { font-family: 'IBM Plex Mono', monospace; background: var(--gold-soft); color: var(--gold-ink); font-size: 1em; }
   sup.ref-tag { color: var(--accent-ink); font-size: 12px; margin-left: 1px; }
 
   .ref-list { margin-top: 10px; font-size: 13.5px; color: var(--ink); }
@@ -203,18 +192,121 @@
   .ac-item { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 15px; }
   .ac-item .vm { color: var(--ink); font-size: 13.5px; margin-top: 4px; }
 
-  /* ---- analyze view ---- */
-  .analyze-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-  textarea.req-input {
-    width: 100%; min-height: 90px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);
-    color: var(--ink); font-family: inherit; font-size: 16px; padding: 10px 12px; resize: vertical;
+  /* ---- review closure (human-in-the-loop) ---- */
+  .req-progress { font-size: 12.5px; color: var(--ink); background: var(--surface-2); border-radius: 999px; padding: 2px 10px; margin-left: 8px; white-space: nowrap; }
+  .req-progress.done { background: var(--value-soft); color: var(--value-ink); }
+  .review-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 18px;
+    background: var(--surface-2); border-radius: 8px; padding: 10px 14px; font-size: 14.5px;
   }
-  textarea.req-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .analyze-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px; flex-wrap: wrap; }
-  .status-line { font-size: 14.5px; color: var(--ink); font-family: 'IBM Plex Mono', monospace; }
-  .status-line.error { color: var(--critical); }
-  .analyze-results { margin-top: 24px; }
-  .sample-hint { font-size: 13.5px; color: var(--ink); margin-top: 8px; }
+  .review-bar b { font-weight: 600; }
+  .review-bar .btn { margin-left: auto; padding: 4px 11px; font-size: 13px; }
+  .review-note { font-size: 13.5px; color: var(--ink); margin: 0 0 10px; }
+
+  .review-list { list-style: none; margin: 0; padding: 0; font-size: 15px; }
+  .review-list li { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .review-list li:last-child { border-bottom: 0; }
+  .review-list li.is-excluded .item-text { text-decoration: line-through; opacity: .5; }
+  .ac-item.is-excluded .item-text { text-decoration: line-through; opacity: .5; }
+  .ac-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .decide { display: inline-flex; gap: 4px; flex: none; }
+  .decide button {
+    font-size: 12.5px; border: 1px solid var(--border); background: transparent;
+    color: var(--ink); border-radius: 999px; padding: 2px 10px; cursor: pointer;
+  }
+  .decide button:hover { border-color: var(--accent); }
+  .decide button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .decide button.d-adopt[aria-pressed="true"] { background: var(--value-soft); color: var(--value-ink); border-color: var(--value); }
+  .decide button.d-exclude[aria-pressed="true"] { background: var(--critical-soft); color: var(--critical); border-color: var(--critical); }
+
+  .er-item { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .er-item.st-closed { border-color: var(--value); }
+  .er-item.st-out { opacity: .6; }
+  .er-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; font-size: 15px; }
+  .er-status {
+    flex: none; font-size: 13px; border-radius: 999px; padding: 3px 8px;
+    border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); cursor: pointer;
+  }
+  .er-status:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .er-status.st-open { color: var(--gold-ink); border-color: var(--gold); }
+  .er-status.st-review { color: var(--accent-ink); border-color: var(--accent); }
+  .er-status.st-closed { color: var(--value-ink); border-color: var(--value); }
+  .er-status.st-out { color: var(--ink-dim); }
+  .ph-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 6px 10px; margin-top: 9px; align-items: center; }
+  @media (max-width: 600px) { .ph-fields { grid-template-columns: 1fr; } }
+  .ph-fields .ph { justify-self: start; font-size: 14px; }
+  .ph-input {
+    width: 100%; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--ink);
+    font-family: inherit; font-size: 15px; padding: 6px 9px;
+  }
+  .ph-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .er-extra-title { font-size: 13px; color: var(--ink); margin: 14px 0 4px; }
+  .ph-filled { background: var(--value-soft); color: var(--value-ink); }
+  .ph-na { font-family: 'IBM Plex Mono', monospace; background: var(--surface-2); color: var(--ink-dim); }
+  .ph-input:disabled { opacity: .5; cursor: not-allowed; }
+  .ph-draft { background: var(--accent-soft); color: var(--accent-ink); }
+  .after-state { font-size: 12px; border-radius: 999px; padding: 1px 8px; margin-left: 6px; text-transform: none; letter-spacing: 0; }
+  .after-state.open { background: var(--gold-soft); color: var(--gold-ink); }
+  .after-state.done { background: var(--value-soft); color: var(--value-ink); }
+
+  /* ---- traceability ---- */
+  .tr-id { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: var(--accent-ink); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; margin-right: 6px; white-space: nowrap; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table.trace { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 640px; }
+  table.trace th { text-align: left; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; padding: 9px 12px; background: var(--surface-2); color: var(--ink); white-space: nowrap; }
+  table.trace td { padding: 9px 12px; border-top: 1px solid var(--border); vertical-align: top; }
+  table.trace td .cell-item { display: block; margin-bottom: 6px; }
+  table.trace td .cell-item:last-child { margin-bottom: 0; }
+  table.trace .is-excluded { text-decoration: line-through; opacity: .5; }
+  .tr-state { font-size: 12px; border-radius: 999px; padding: 1px 8px; margin-left: 4px; border: 1px solid var(--border); white-space: nowrap; }
+  .tr-state.st-open { color: var(--gold-ink); border-color: var(--gold); }
+  .tr-state.st-review { color: var(--accent-ink); border-color: var(--accent); }
+  .tr-state.st-closed { color: var(--value-ink); border-color: var(--value); }
+  .tr-state.st-out { color: var(--ink-dim); }
+  .tr-warn { color: var(--gold-ink); font-size: 14px; }
+  .trace-warns { margin: 10px 0 0; padding: 10px 14px; background: var(--gold-soft); border-radius: 8px; font-size: 14px; color: var(--gold-ink); }
+  .trace-warns ul { margin: 4px 0 0; padding-left: 18px; }
+  .trace-ok { margin: 10px 0 0; font-size: 14px; color: var(--value-ink); }
+  .matrix-link { margin-top: 4px; }
+  table.matrix td.num, table.matrix th.num { text-align: center; white-space: nowrap; }
+  table.matrix tr.row-link { cursor: pointer; }
+  table.matrix tr.row-link:hover td { background: var(--surface-2); }
+  table.matrix .m-title { font-size: 14.5px; }
+  table.matrix .m-case { font-size: 13px; color: var(--ink); }
+
+  /* ---- similar requirements ---- */
+  .sim-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .sim-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .sim-topic { font-weight: 600; font-size: 15.5px; }
+  .sim-head .btn { padding: 4px 11px; font-size: 13px; }
+  .sim-req { margin: 8px 0 6px; font-size: 14.5px; }
+  .sim-pairs { margin: 0; padding-left: 0; list-style: none; font-size: 14px; }
+  .sim-pairs li { padding: 5px 0; border-top: 1px solid var(--border); }
+  .sim-arrow { color: var(--ink); margin-right: 6px; }
+  .sim-vals { display: block; margin-top: 3px; color: var(--value-ink); font-size: 13.5px; }
+
+  /* ---- collapsed detail section ---- */
+  .more-details { margin-top: 22px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+  .more-details > summary { cursor: pointer; padding: 11px 14px; font-weight: 600; font-size: 15px; list-style: none; }
+  .more-details > summary::-webkit-details-marker { display: none; }
+  .more-details > summary::before { content: '▸'; display: inline-block; margin-right: 8px; transition: transform .15s ease; }
+  .more-details[open] > summary::before { transform: rotate(90deg); }
+  .more-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .more-hint { font-weight: 400; font-size: 13.5px; color: var(--ink-dim); margin-left: 6px; }
+  .more-body { padding: 0 14px 18px; border-top: 1px solid var(--border); }
+
+  /* ---- roadmap ---- */
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 760px) { .roadmap { grid-template-columns: 1fr; } }
+  .roadmap-col { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .roadmap-col h3 { font-size: 15.5px; margin: 8px 0 8px; }
+  .roadmap-col ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .stage-chip { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; }
+  .stage-now { background: var(--value-soft); color: var(--value-ink); }
+  .stage-next { background: var(--accent-soft); color: var(--accent-ink); }
+  .stage-future { background: var(--surface-2); color: var(--ink); }
+
 
   footer.page-note {
     margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--border);
@@ -224,7 +316,7 @@
 
 <div class="wrap" id="app"></div>
 
-<script id="poc-data" type="application/json">{"cases": [{"case_type": "value", "id": "kakaomobility-hotel-delivery", "source_prefix": "출처 5.", "title": "카카오모빌리티 호텔 로봇 배송", "date_label": "2026.03.16", "news_outlet": "연합뉴스", "news_date": "2026.03.16", "news_url": "https://www.yna.co.kr/view/AKR20260316051700017?section=search", "summary": "로보티즈와 협업해 호텔 실내외 배송로봇 서비스 상용화. 도입 후 가동률 8배 상승, 배송 성공률 100% 달성. QR 주문 시스템과 결합해 A호텔 룸서비스 매출 약 3배 증가.", "case_tag": "가동률·매출 증가 지속 조건", "core_point": "기사에는 배송 성공률 성과가 제시되어 있지만, 요구사항 관점에서는 배송 완료·실패 판정 및 예외처리 기준을 추가로 정의할 필요가 있습니다.", "tags": ["System Integration", "Delivery SLA", "Exception Handling", "Order State"], "req_ids": ["v5-1"], "requirements": [{"id": "v5-1", "source": "출처 5. 호텔 룸서비스까지 로봇이 배송…카카오모빌리티 통했다 (연합뉴스, 2026.03.16)", "requirement_text": "로봇 배송 플랫폼은 QR 기반 주문 시스템과 연동하여, 룸서비스 주문 접수부터 로봇 배송 완료까지 실패 없이 처리할 수 있어야 한다", "ambiguous_terms": [{"term": "실패 없이", "issue": "실패 정의·허용 오류율·측정 기준 없음"}, {"term": "연동", "issue": "인터페이스 방식·데이터 범위·책임 경계 불명확"}, {"term": "QR 기반 주문 시스템", "issue": "대상 시스템 식별·규격 미지정"}, {"term": "배송 완료", "issue": "완료 판정 조건과 인수 확인 방법 불명확"}, {"term": "처리할 수 있어야 한다", "issue": "처리 성능·시간·예외 처리 기준 없음"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "배송 완료 판정 조건 및 수령 확인 방법"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "QR 주문 시스템과의 인터페이스 규격·연동 데이터 범위·책임 경계"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "고객 부재, 수령 거부, 경로·엘리베이터 장애 시 처리 절차"}, {"rank": 4, "priority": "P0", "category": "성능", "item": "실패 정의와 허용 실패율, 접수~배송 단계별 처리 시간 기준"}, {"rank": 5, "priority": "P1", "category": "상태", "item": "주문 접수부터 완료까지의 상태 전이 정의와 동기화 시점"}], "revised_requirement": "로봇 배송 플랫폼은 [지정된 QR 주문 시스템]과 [정의된 인터페이스 규격]으로 연동하여, 주문 접수부터 [배송 완료 판정 조건] 충족까지 [정의된 주문 상태 전이]에 따라 처리해야 한다. [정의된 실패 조건] 발생 시에는 [예외 처리 절차]에 따라 주문을 안전 상태로 전환하고, 허용 실패율 [값] 이내와 단계별 처리 시간 [값]을 만족해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "QR 주문 시스템과의 인터페이스 방식과 연동 데이터 범위는 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "배송 완료 판정과 수령 확인은 어떤 방식으로 검출하는가?"}, {"rank": 3, "priority": "P0", "question": "실패의 정의와 허용 실패율은 얼마인가?"}, {"rank": 4, "priority": "P0", "question": "고객 부재·수령 거부·엘리베이터 장애 시 로봇은 어떻게 동작하는가?"}, {"rank": 5, "priority": "P1", "question": "주문 상태 전이와 양 시스템 간 동기화 시점은 어떻게 정의하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "QR 주문 시스템과 정의된 인터페이스 규격으로 주문 접수 정보가 연동되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "주문이 정의된 상태 전이 순서에 따라 접수부터 배송 완료까지 진행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "정의된 배송 완료 판정 조건을 충족한 경우에만 완료로 처리되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "정의된 실패 조건 발생 시 주문과 로봇이 예외 처리 절차에 따라 안전 상태로 전환되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "허용 실패율과 단계별 처리 시간 기준을 충족하는지 확인"}]}]}, {"case_type": "value", "id": "chungnam-hospital-robot", "source_prefix": "출처 1.", "title": "충남대병원 약제 이송 로봇 '드림이'", "date_label": "2026.06.17", "news_outlet": "연합뉴스", "news_date": "2026.06.17", "news_url": "https://www.yna.co.kr/view/AKR20260617126300063", "summary": "1호 '다송이'가 7개월간 검체·약제 이송 8천 건 이상을 수행해 지원인력 5명분 업무량의 약 7배를 처리. 2호 '드림이'는 원내 약국~병동 정규 약제 배송 자동화에 집중해 지원인력·간호사의 반복 왕래 업무를 줄일 것으로 기대.", "case_tag": "반복 업무 자동화 · 처리량 확대", "core_point": "기사에서 확인된 약제 이송 업무를 요구사항으로 전환하면, 배송 대상·인계 완료·예외처리 조건을 추가로 정의할 필요가 있습니다.", "tags": ["Automated Delivery", "Access Control", "Exception Handling", "Throughput"], "req_ids": ["v1-1"], "requirements": [{"id": "v1-1", "source": "출처 1. 충남대병원, 자율주행 약제 이송 로봇 2호 '드림이' 도입 (연합뉴스, 2026.06.17)", "requirement_text": "로봇은 원내 약국에서 병동까지 정규 약제를 자동으로 배송하여, 지원인력과 간호사가 반복적으로 약국을 오가는 업무를 대체할 수 있어야 한다", "ambiguous_terms": [{"term": "정규 약제", "issue": "대상 약제 종류·마약류/냉장 포함 여부 불명확"}, {"term": "자동으로", "issue": "사람 개입 범위(적재·인계·문/엘리베이터) 불명확"}, {"term": "배송", "issue": "완료 기준(인계 대상·수령 확인 방식) 불명확"}, {"term": "병동까지", "issue": "목적지 단위(병동/간호스테이션/병실) 불명확"}, {"term": "대체할 수 있어야", "issue": "대체 비율·성능 목표가 정량화되지 않음"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "배송 대상 약제 범위(마약류·향정·냉장·응급 제외 여부)와 적재 용량·보관 조건"}, {"rank": 2, "priority": "P0", "category": "검증기준", "item": "배송 완료 판정 기준(인계 대상자, 본인확인·수령 서명 방식)"}, {"rank": 3, "priority": "P0", "category": "권한", "item": "약제함 잠금 해제 권한 및 인증 수단(간호사·약사 식별)"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "수령자 부재·경로 차단·배터리 부족·오배송 시 처리 절차와 약제 회수 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "1회 배송 소요시간·일일 처리 건수·정시 도착률 등 대체 목표치"}], "revised_requirement": "로봇은 [배송 허용 약제 범위]를 원내 약국에서 [지정 인계 지점]까지 운반하고, [인증된 수령자]의 [수령 확인 수단]을 통해 인계가 확인된 경우에만 배송 완료로 처리해야 한다. [배송 예외 상황] 발생 시 약제함은 잠금을 유지한 채 [예외 처리 절차]에 따라 회수·재배송되어야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "마약류·향정·냉장 약제를 배송 범위에 포함할 것인가?"}, {"rank": 2, "priority": "P0", "question": "약제함 잠금 해제 인증 수단은 무엇으로 할 것인가?"}, {"rank": 3, "priority": "P0", "question": "수령자 부재·경로 차단·배터리 부족 시 회수 절차는 어떻게 할 것인가?"}, {"rank": 4, "priority": "P1", "question": "문·엘리베이터 통과를 로봇이 자율 수행할 것인가, 사람이 개입할 것인가?"}, {"rank": 5, "priority": "P1", "question": "1회 배송 소요시간과 일일 처리 건수 목표치는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 배송 허용 약제 범위에 해당하는 약제만 배송 대상으로 처리되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "인증된 수령자의 수령 확인이 있는 경우에만 약제함 잠금이 해제되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "인계 확인이 완료된 경우에만 배송 완료로 처리되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "배송 예외 상황에서 약제함이 잠금 상태를 유지하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "예외 발생 시 정의된 절차에 따라 회수 또는 재배송이 수행되는지 확인"}]}]}, {"case_type": "value", "id": "gmarket-logistics", "source_prefix": "출처 2.", "title": "G마켓 물류센터 로봇 통합 운영", "date_label": "2024.03.24", "news_outlet": "연합뉴스", "news_date": "2024.03.24", "news_url": "https://www.yna.co.kr/view/AKR20240322171000030", "summary": "동탄메가센터에 LG CNS 이종 로봇 통합 운영 솔루션 도입. 로보셔틀+피킹 로봇이 적재·피킹·운반·정리 전 과정을 수행해 공간 효율 3배 이상 증가. 현재 기술 검증 진행 중.", "case_tag": "이종 로봇 통합 운영 · 공간 효율 개선", "core_point": "적재·피킹·운반·정리 업무를 이종 로봇이 연계 수행하기 위해, 공정 범위·작업 인계·예외처리 조건을 요구사항 단계에서 구체화할 필요가 있습니다.", "tags": ["Fleet Integration", "User Access Level", "Fault Handling", "Throughput"], "req_ids": ["v2-1"], "requirements": [{"id": "v2-1", "source": "출처 2. 적재·운반도 로봇이 '척척'…G마켓 물류센터 첨단설비 도입 (연합뉴스, 2024.03.24)", "requirement_text": "로봇 통합 운영 시스템은 적재·피킹·운반·정리 공정을 이종 로봇이 연계해 수행할 수 있어야 하며, 작업자가 설비를 조작할 수 있는 사용자 환경을 제공해야 한다", "ambiguous_terms": [{"term": "이종 로봇", "issue": "대상 로봇 종류·제조사·인터페이스 범위 미정의"}, {"term": "연계해 수행", "issue": "연계 방식·작업 이관 기준·동기화 조건 불명확"}, {"term": "적재·피킹·운반·정리 공정", "issue": "각 공정의 범위와 완료 판정 기준 미정의"}, {"term": "사용자 환경", "issue": "UI 형태·제공 매체·기능 범위 불명확"}, {"term": "설비를 조작", "issue": "조작 대상 설비와 허용 조작 권한 범위 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "연계 대상 로봇 기종·제조사별 통신 인터페이스 및 프로토콜 규격"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "공정 간 작업 이관 시점·선행조건 및 공정별 완료 판정 기준"}, {"rank": 3, "priority": "P0", "category": "권한", "item": "작업자 역할별 조작 가능 설비 범위와 권한 등급"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "로봇 통신 단절·작업 실패 시 공정 중단 및 복구 처리 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "동시 운용 로봇 대수 및 작업 지시 응답 시간 목표"}], "revised_requirement": "로봇 통합 운영 시스템은 [정의된 공정 목록]을 [연계 대상 로봇군]이 [작업 이관 기준]에 따라 연속 수행하도록 제어하고, 각 공정은 [공정별 완료 판정 기준]으로 완료를 판정해야 한다. 또한 [권한 등급별 작업자]가 [조작 대상 설비 범위]를 조작할 수 있는 사용자 환경을 제공하고, [통신 단절·작업 실패 조건] 발생 시 공정을 중단하고 [복구 절차]에 따라 재개해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "기종·제조사별 통신 인터페이스와 프로토콜을 어떤 규격으로 통합할 것인가?"}, {"rank": 2, "priority": "P0", "question": "공정 간 작업 이관 시점과 선행조건을 어떤 신호·상태로 판정할 것인가?"}, {"rank": 3, "priority": "P0", "question": "통신 단절·작업 실패 시 중단 범위와 복구 방식은 어떻게 할 것인가?"}, {"rank": 4, "priority": "P1", "question": "권한 등급별 조작 가능 설비와 제어 우선순위를 어떻게 구분할 것인가?"}, {"rank": 5, "priority": "P1", "question": "동시 운용 로봇 대수와 작업 지시 응답 시간 목표는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 공정 목록이 연계 대상 로봇군에 의해 중단 없이 연속 수행되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "공정 간 작업 이관이 정의된 이관 기준을 충족한 경우에만 수행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "각 공정이 공정별 완료 판정 기준에 따라 완료로 판정되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "통신 단절·작업 실패 조건 발생 시 공정이 중단되고 복구 절차 충족 후에만 재개되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "권한 등급별 작업자가 허용된 조작 대상 설비 범위 내에서만 조작할 수 있는지 확인"}]}]}, {"case_type": "value", "id": "sk-innovation-robot-dog", "source_prefix": "출처 4.", "title": "SK이노베이션 순찰 로봇개", "date_label": "2024.05.26", "news_outlet": "연합뉴스", "news_date": "2024.05.26", "news_url": "https://www.yna.co.kr/view/AKR20240524120400003", "summary": "울산CLX에서 로봇개가 가스탐지·열화상·30배줌으로 주간 순찰, 사람 하루 3회 대비 4~6회 수행. 안전 문제로 현재는 주간만 운영하며, 테스트 완료 후 하반기 야간 순찰 확대 계획 ('스마트 플랜트 2.0', 연간 100억원 비용 개선 기대).", "case_tag": "주간 성과 기반 야간 확대", "core_point": "기사에는 야간 순찰 확대 전 테스트 계획이 제시되어 있어, 실제 요구사항에서는 야간 운행 조건과 테스트 완료 기준을 구체화할 필요가 있습니다.", "tags": ["Autonomous Patrol", "Low-light Detection", "Fail-safe", "Approval Gate"], "req_ids": ["v4-1"], "requirements": [{"id": "v4-1", "source": "출처 4. [르포] 로봇개가 공장 순찰을…SK이노베이션 '스마트 플랜트 2.0' (연합뉴스, 2024.05.26)", "requirement_text": "로봇개는 주간 순찰에서 검증된 이상 감지·알림 기능을 바탕으로, 테스트 완료 후 사람의 개입 없이 야간 순찰까지 확대 수행할 수 있어야 한다", "ambiguous_terms": [{"term": "검증된", "issue": "검증 주체·합격 기준·증빙 방법 미정의"}, {"term": "이상 감지", "issue": "이상의 정의와 탐지 대상 항목이 불명확"}, {"term": "테스트 완료 후", "issue": "테스트 범위와 완료 판정 기준 부재"}, {"term": "사람의 개입 없이", "issue": "자율 수준과 예외 시 개입 허용 범위 불명확"}, {"term": "야간 순찰까지 확대 수행", "issue": "야간 정의(시간대)와 확대 범위·성능 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "야간 확대 승인을 위한 테스트 항목·합격 기준과 판정 주체"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "야간 시간대 정의 및 확대 대상 구역·경로 범위"}, {"rank": 3, "priority": "P0", "category": "성능", "item": "저조도 환경에서의 이상 감지율·오탐율 및 감지 거리 기준"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "감지 실패·통신 두절·배터리 부족·장애물 발생 시 대응 동작과 복귀 상태"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "야간 알림 수신 주체와 원격 개입·순찰 중단 권한 범위"}], "revised_requirement": "로봇개는 [정의된 이상 항목]에 대한 감지·알림 성능이 [야간 확대 승인 기준]을 충족하고 [판정 권한자]의 승인을 받은 경우, [야간 시간대]의 [지정 순찰 구역·경로]를 사람의 상시 개입 없이 순찰해야 한다. [감지 실패·통신 두절·배터리 부족 등 예외 조건] 발생 시에는 [정의된 안전 동작]으로 전환하고 [알림 수신 주체]에게 통보해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "야간 확대 승인을 위한 테스트 항목과 합격 기준은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "저조도 환경에서 요구되는 감지율·오탐율·감지 거리는 얼마인가?"}, {"rank": 3, "priority": "P0", "question": "통신 두절·배터리 부족 시 로봇의 안전 동작과 복귀 상태는 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "야간 순찰 대상 시간대와 구역·경로 범위는 어떻게 정의하는가?"}, {"rank": 5, "priority": "P1", "question": "야간 알림 수신 주체와 원격 개입·순찰 중단 권한은 어디까지 허용하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 야간 확대 승인 기준을 충족하고 권한자 승인이 있는 경우에만 야간 순찰이 개시되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "저조도 야간 환경에서 정의된 이상 항목에 대한 감지·알림 성능 기준을 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "감지 실패·통신 두절·배터리 부족 발생 시 정의된 안전 동작으로 전환되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "예외 조건 발생 시 지정된 알림 수신 주체에게 통보가 이루어지는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "지정된 야간 시간대와 순찰 구역·경로 범위 내에서만 자율 순찰이 수행되는지 확인"}]}]}, {"case_type": "value", "id": "manufacturing-orchestration", "source_prefix": "출처 3.", "title": "제조업 로봇 공장 통합 운영", "date_label": "2026.07.09", "news_outlet": "네이트", "news_date": "2026.07.09", "news_url": "https://news.nate.com/view/20260709n09378", "summary": "디지털 트윈 사전검증 + VLA 기반 현장 대응 + 이기종 로봇·생산관리시스템·설비데이터 통합 관제로, 공정 지연·설비 이상 발생 시 로봇별 작업 지시와 경로를 재배정하는 체계로 확장 중 (SK AX '제조 RX 풀스택 서비스').", "case_tag": "공정 통합 관제 · 이상 대응 자동화", "core_point": "기사에서는 작업·경로 재배정 기능이 소개되지만, 재배정 판정 기준과 예외처리 조건까지는 확인하기 어렵습니다.", "tags": ["Fleet Orchestration", "Fault Detection", "Auto Reassignment", "Safety Stop"], "req_ids": ["v3-1"], "requirements": [{"id": "v3-1", "source": "출처 3. 제조업 로봇 활용, 자동 작업 넘어 공장 통합 운영으로 (네이트, 2026.07.09)", "requirement_text": "공장 통합 관제 시스템은 공정 지연이나 설비 이상이 발생한 경우, 이기종 로봇의 작업 지시와 이동 경로를 자동으로 재배정할 수 있어야 한다", "ambiguous_terms": [{"term": "공정 지연", "issue": "지연 판정 기준·임계 시간 미정의"}, {"term": "설비 이상", "issue": "이상 유형과 감지 조건이 불명확"}, {"term": "이기종 로봇", "issue": "대상 기종·인터페이스 범위 불명확"}, {"term": "자동으로", "issue": "사람 개입·승인 절차 여부 불명확"}, {"term": "재배정", "issue": "우선순위 규칙과 완료 판정 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "재배정 트리거 판정 기준과 우선순위 규칙(작업 긴급도·납기·로봇 가용성)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "재배정 시점의 진행 중 작업 처리 방식(중단·완료 후 전환)과 로봇 초기 상태 정의"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "재배정 실패·경로 충돌·통신 두절 시 대체 동작 및 안전 정지 기준"}, {"rank": 4, "priority": "P1", "category": "성능", "item": "이상 감지부터 재배정 지시 전달까지 허용 시간 및 동시 처리 로봇 대수"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "자동 재배정 결과에 대한 운영자 승인·수동 개입 권한 범위"}], "revised_requirement": "공장 통합 관제 시스템은 [정의된 공정 지연 조건] 또는 [정의된 설비 이상 조건]이 감지되면, [지원 대상 로봇군]의 작업 지시와 이동 경로를 [재배정 우선순위 규칙]에 따라 [값] 이내에 재배정해야 한다. 재배정 실패·경로 충돌·통신 두절 시에는 [대체 동작]을 수행하고, [운영자 개입 권한 범위]에 따라 수동 조정이 가능해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "공정 지연과 설비 이상의 감지 기준과 임계값은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "재배정 시 진행 중인 작업은 중단할 것인가, 완료 후 전환할 것인가?"}, {"rank": 3, "priority": "P0", "question": "재배정 실패·경로 충돌·통신 두절 시 안전 정지 기준은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "이기종 로봇 제어를 위한 지원 기종과 통신 인터페이스 범위는 어디까지인가?"}, {"rank": 5, "priority": "P1", "question": "이상 감지부터 재배정 지시 전달까지 허용 시간과 동시 처리 로봇 대수는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 공정 지연 또는 설비 이상 조건이 감지되면 재배정이 자동으로 개시되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "재배정 시 진행 중인 작업이 정의된 전환 규칙에 따라 처리되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "재배정 실패·경로 충돌·통신 두절 시 정의된 대체 동작과 안전 상태로 전환되는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "재배정 결과가 정의된 우선순위 규칙과 허용 시간 이내에 로봇에 전달되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "지원 대상 로봇군 전체에 대해 재배정 기능이 유효하며 운영자 수동 조정이 가능한지 확인"}]}]}, {"case_type": "risk", "id": "goseong-cobot", "source_prefix": "출처 1.", "title": "경남 고성 협동로봇 사고", "date_label": "2023년", "news_outlet": "경향신문", "news_date": "2023.11.08", "news_url": "https://www.khan.co.kr/article/202311081103001", "summary": "협동로봇이 작업자를 상자로 착각해 컨베이어벨트에 밀착시켜 사망.", "case_tag": "사람/작업 대상 오인 · 비상정지 체계 미비", "core_point": "사람이 작업영역에 있는 상태에서 로봇이 정지하지 않고 동작해 사망 사고로 이어짐.", "tags": ["Human Detection", "Emergency Stop", "Priority Rule", "Restart Condition"], "req_ids": ["1-1", "1-2", "1-3"], "requirements": [{"id": "1-1", "source": "출처 1. 2023년 경남 고성 파프리카 선별장 협동로봇 사망 사고", "requirement_text": "비상상황에서 작동을 수동으로 중단하는 절차가 필요하다", "ambiguous_terms": [{"term": "비상상황", "issue": "판정 조건·트리거가 정의되지 않음"}, {"term": "작동", "issue": "중단 대상 기능·범위가 불명확"}, {"term": "수동으로", "issue": "조작 주체와 조작 수단이 불명확"}, {"term": "중단", "issue": "목표 정지 상태와 완료 기준이 불명확"}, {"term": "절차", "issue": "문서인지 시스템 기능인지 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "비상상황 판정 조건 및 중단 트리거 정의"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "중단 대상 기능·설비 범위"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "중단 완료 시 목표 정지 상태와 유지 항목"}, {"rank": 4, "priority": "P0", "category": "성능", "item": "중단 명령 후 정지 완료 허용 시간"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "중단 조작 주체·수단 및 재가동 승인 권한"}], "revised_requirement": "시스템은 [정의된 비상 조건] 발생 시 [권한 사용자]가 [수동 중단 수단]으로 [중단 대상 설비·기능]을 [목표 정지 상태]로 전환할 수 있어야 한다. 중단 상태는 자동 해제되지 않으며, [재가동 조건과 승인 권한]이 충족된 경우에만 정상 운전으로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "비상상황 판정 트리거는 어떤 신호·조건으로 검출하는가?"}, {"rank": 2, "priority": "P0", "question": "중단 대상 설비·기능의 범위는 어디까지인가?"}, {"rank": 3, "priority": "P0", "question": "정지 방식과 목표 정지 상태에서 유지할 항목은 무엇인가?"}, {"rank": 4, "priority": "P0", "question": "중단 명령 후 허용 정지 완료 시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "전원·통신 이상 시 수동 중단 수단을 어떻게 동작시킬 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 비상 조건 발생 시 권한 사용자가 수동 중단 수단으로 대상 설비를 중단시킬 수 있는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "중단 명령 시 대상 설비·기능이 정의된 목표 정지 상태로 전환되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "중단 상태가 자동으로 해제되지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "정의된 재가동 조건과 승인 권한이 충족된 경우에만 정상 운전으로 복귀하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "전원·통신 이상 상황에서도 수동 중단 수단이 유효하게 동작하는지 확인"}]}, {"id": "1-2", "source": "출처 1. 2023년 경남 고성 파프리카 선별장 협동로봇 사망 사고", "requirement_text": "사람과 상자가 같이 있는 상황에서 사람 중심으로 고려해야 하지만 상황에 따라 어느 것을 기준으로 두고 움직일지 정의가 필요하다", "ambiguous_terms": [{"term": "같이 있는 상황", "issue": "동시 검출 판정 기준(거리·시야·시간)이 불명확"}, {"term": "사람 중심으로 고려", "issue": "우선순위 처리 방식과 결과 동작이 불명확"}, {"term": "상황에 따라", "issue": "분기 조건 목록이 정의되지 않음"}, {"term": "어느 것을 기준으로 두고", "issue": "기준 대상 선택 규칙이 미정"}, {"term": "움직일지", "issue": "대상 거동(주행·정지·회피) 범위가 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "사람·상자 동시 검출 판정 기준(거리·각도·지속시간)"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "사람 우선/상자 기준 전환 상황 목록과 분기 규칙"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "기준 대상별 로봇 거동 정의(감속·정지·회피·우회)"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "사람·상자 오분류 및 검출 실패 시 기본 동작"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "기준 선택 정확도 및 안전거리 확보 판정 기준"}], "revised_requirement": "시스템은 [사람·상자 동시 검출 조건]이 성립하면 [정의된 분기 상황 목록]에 따라 기준 대상을 선택하되, 기본값은 사람을 우선하여 [기준 대상별 거동]을 수행해야 한다. 대상 분류가 불확실하거나 검출에 실패한 경우에는 사람으로 간주하여 [안전 기본 동작]을 수행해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "사람·상자 동시 검출은 어떤 거리·각도·지속시간 기준으로 판정하는가?"}, {"rank": 2, "priority": "P0", "question": "사람 우선에서 상자 기준으로 전환되는 상황은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "기준 대상별 거동(감속·정지·회피·우회)은 어떻게 구분하는가?"}, {"rank": 4, "priority": "P0", "question": "분류 불확실·검출 실패 시 기본 동작은 무엇으로 하는가?"}, {"rank": 5, "priority": "P1", "question": "기준 선택 정확도와 안전거리 확보의 합격 기준은 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "사람과 상자가 동시에 검출된 경우 정의된 조건 판정에 따라 동시 검출 상황으로 인식하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "기본 상태에서 사람을 기준 대상으로 우선 선택하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "정의된 분기 상황에 해당할 때만 상자를 기준 대상으로 전환하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "선택된 기준 대상에 대해 정의된 거동을 수행하는지 확인"}, {"rank": 5, "priority": "P0", "criterion": "대상 분류가 불확실하거나 검출에 실패한 경우 사람으로 간주해 안전 기본 동작을 수행하는지 확인"}]}, {"id": "1-3", "source": "출처 1. 2023년 경남 고성 파프리카 선별장 협동로봇 사망 사고", "requirement_text": "사람과 사람이 아닌 것을 정확히 구분하는 기준을 관리할 수 있어야 한다", "ambiguous_terms": [{"term": "정확히", "issue": "정확도 지표·허용 오류율 기준 없음"}, {"term": "사람이 아닌 것", "issue": "대상 범위와 분류 항목이 정의되지 않음"}, {"term": "구분", "issue": "판정 방식과 출력 형태가 불명확"}, {"term": "기준", "issue": "임계값·규칙·모델 중 무엇인지 불명확"}, {"term": "관리", "issue": "조회/수정/이력·권한 범위가 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "사람/비사람 판정 정확도 지표와 오탐·미탐 허용 한계치"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "판정 대상 입력 범위와 비사람 분류 항목 목록"}, {"rank": 3, "priority": "P0", "category": "조건", "item": "관리 대상 기준의 형태(임계값·규칙·모델)와 변경 가능 범위"}, {"rank": 4, "priority": "P0", "category": "권한", "item": "기준 조회·수정·배포 주체별 권한 구분"}, {"rank": 5, "priority": "P1", "category": "예외", "item": "판정 불가·저신뢰도 입력 시 처리 방식"}], "revised_requirement": "시스템은 [정의된 입력 범위] 내 대상을 사람과 [정의된 비사람 분류 항목]으로 판정하고, 그 판정에 사용되는 [관리 대상 기준 형태]를 [권한 사용자]가 조회·변경·배포할 수 있어야 한다. 판정 결과는 [정확도 지표] 기준 [값]을 충족해야 하며, [저신뢰도·판정 불가 조건]에서는 [정의된 안전 처리]를 따라야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "사람/비사람 판정의 정확도 지표와 오탐·미탐 허용 한계치는 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "판정 대상 입력 범위와 비사람 분류 항목은 무엇으로 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "관리 대상 기준은 임계값·규칙·모델 중 무엇이며 변경 가능 범위는 어디까지인가?"}, {"rank": 4, "priority": "P1", "question": "기준 변경 내용을 운전 중 시스템에 어떤 방식으로 배포·적용할 것인가?"}, {"rank": 5, "priority": "P1", "question": "저신뢰도 또는 판정 불가 입력 시 시스템은 어떤 상태로 동작해야 하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 입력 범위 내 대상을 사람과 비사람 분류 항목으로 판정하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "판정 결과가 확정된 정확도 지표 및 오탐·미탐 허용 한계치를 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "저신뢰도 또는 판정 불가 조건에서 정의된 안전 처리로 동작하는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "권한 사용자만 관리 대상 기준을 조회·변경·배포할 수 있는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "변경된 기준이 정의된 배포 절차를 통해 판정에 실제로 적용되는지 확인"}]}]}, {"case_type": "risk", "id": "songdo-delivery", "source_prefix": "출처 2.", "title": "인천 송도 배달로봇 충돌", "date_label": "2024.12.3 사고 / 2024.12.18 보도", "news_outlet": "연합뉴스", "news_date": "2024.12.18", "news_url": "https://www.yna.co.kr/view/AKR20241218160000065", "summary": "자율주행 로직은 적신호 시 정지하도록 설계됐으나, 관제사가 원격조종으로 개입해 적신호 상태에서 횡단보도를 건너다 승용차와 충돌. 충돌 후에도 원격조종 중 로봇이 한 번 더 움직여 2차 손상 발생.", "case_tag": "원격조종 개입 · 안전 로직 우회", "core_point": "자율주행 안전 로직이 있었지만 사람의 원격 개입이 이를 우회할 수 있었고, 개입 중 안전 규칙이 유지되지 않음.", "tags": ["Teleoperation", "Override", "Permission", "Safety Interlock"], "req_ids": ["2-1", "2-2", "2-3"], "requirements": [{"id": "2-1", "source": "출처 2. 인천 송도 배달로봇-승용차 충돌 (연합뉴스, 2024.12.18 보도, 사고 발생 12.3)", "requirement_text": "로봇은 원격 조종 상태에서도 신호등 규정을 위반해서 이동해서는 안 된다", "ambiguous_terms": [{"term": "원격 조종 상태", "issue": "자율/수동 전환 조건 및 상태 판정 기준 미정의"}, {"term": "신호등 규정", "issue": "적용 법규·신호 종류(보행/차량) 범위 불명확"}, {"term": "위반", "issue": "정지선·진입시점 등 판정 기준 부재"}, {"term": "이동", "issue": "주행·회전·미소 이동 포함 범위 불명확"}, {"term": "해서는 안 된다", "issue": "금지 시 시스템 동작(정지·경고·차단) 미정의"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "신호 인식 수단과 신호 상태 판정 기준(적색·황색·점멸 포함)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "위반 예상 시 시스템 동작(정지·감속·명령 차단)과 정지 위치"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "신호 인식 실패·통신 지연/두절 시 기본 동작(fail-safe)"}, {"rank": 4, "priority": "P1", "category": "권한", "item": "긴급차량 양보·교통경찰 수신호 등 조종자 오버라이드 허용 조건과 권한"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "신호 인지부터 정지 완료까지 허용 응답시간 및 정지거리"}], "revised_requirement": "로봇은 [원격 조종 상태]를 포함한 모든 운행 모드에서 [적용 신호 규정]에 따른 [정지 신호 상태]를 판정하고, 위반이 예상되면 조종 명령과 무관하게 [정지 기준 위치] 이전에 정지해야 한다. 신호 인식 실패·통신 이상 시에는 [기본 안전 동작]을 수행하며, [허용된 오버라이드 조건과 권한]에서만 예외 이동을 허용한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "신호 상태는 어떤 수단으로 인식하고 판정하는가?"}, {"rank": 2, "priority": "P0", "question": "위반 예상 시 정지·감속·명령 차단 중 무엇을 적용하는가?"}, {"rank": 3, "priority": "P0", "question": "신호 인식 실패·통신 두절 시 기본 동작은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "신호 인지부터 정지 완료까지 허용 응답시간과 정지거리는 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "수신호·긴급차량 상황의 오버라이드는 어떻게 구현하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "원격 조종을 포함한 모든 운행 모드에서 정지 신호 상태를 판정하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "위반이 예상되면 조종 명령과 무관하게 정지 기준 위치 이전에 정지하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "신호 인식 실패 또는 통신 이상 시 정의된 기본 안전 동작을 수행하는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "허용된 오버라이드 조건과 권한이 충족된 경우에만 예외 이동이 허용되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "신호 인지부터 정지 완료까지 확정된 응답시간·정지거리 기준을 충족하는지 확인"}]}, {"id": "2-2", "source": "출처 2. 인천 송도 배달로봇-승용차 충돌 (연합뉴스, 2024.12.18 보도, 사고 발생 12.3)", "requirement_text": "사고(충돌) 발생 직후에는 원격 조종을 포함해 로봇의 추가 이동을 제한해야 한다", "ambiguous_terms": [{"term": "사고(충돌) 발생", "issue": "충돌 판정 기준·감지 방식이 정의되지 않음"}, {"term": "직후", "issue": "적용 시점과 지속 시간이 불명확"}, {"term": "원격 조종을 포함해", "issue": "포함되는 제어 경로 범위가 불명확"}, {"term": "추가 이동", "issue": "대상 동작(주행·관절·회전) 범위가 불명확"}, {"term": "제한", "issue": "정지·감속·금지 중 목표 상태와 해제 조건이 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "충돌 판정 기준(센서 종류·임계값)과 오탐 처리"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "이동 제한 진입 시 목표 상태(즉시정지·감속정지)와 유지 항목"}, {"rank": 3, "priority": "P0", "category": "권한", "item": "제한 해제 주체·절차 및 재가동 승인 조건"}, {"rank": 4, "priority": "P1", "category": "예외", "item": "2차 위험 회피를 위한 예외 이동 허용 범위"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "충돌 감지부터 이동 차단까지 허용 응답 시간"}], "revised_requirement": "시스템은 [정의된 충돌 판정 조건] 감지 시 [값] 이내에 원격 조종을 포함한 [제어 경로 전체]의 [제한 대상 동작]을 차단하고 로봇을 [목표 안전 상태]로 전환해야 한다. 이동 제한은 자동으로 해제되지 않으며, [권한 사용자]의 [재가동 승인 절차]가 완료된 경우에만 해제되고 [2차 위험 회피용 예외 이동]만 허용한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "충돌 판정에 사용할 센서와 임계값은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "오탐 발생 시 판정 로직은 어떻게 처리할 것인가?"}, {"rank": 3, "priority": "P0", "question": "이동 제한 진입 시 목표 상태는 즉시정지인가 감속정지인가?"}, {"rank": 4, "priority": "P1", "question": "충돌 감지부터 이동 차단까지 허용 응답 시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "원격 조종 등 외부 제어 경로는 어떤 방식으로 차단할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 충돌 판정 조건 감지 시 로봇이 목표 안전 상태로 전환되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "원격 조종을 포함한 모든 제어 경로의 이동 명령이 차단되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "이동 제한 상태가 자동으로 해제되지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "권한 사용자의 재가동 승인 절차가 완료된 경우에만 제한이 해제되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "제한 상태에서 2차 위험 회피용 예외 이동만 허용되는지 확인"}]}, {"id": "2-3", "source": "출처 2. 인천 송도 배달로봇-승용차 충돌 (연합뉴스, 2024.12.18 보도, 사고 발생 12.3)", "requirement_text": "관제사가 원격 조종으로 개입하는 경우의 트리거 조건과 권한 범위를 정의해야 한다", "ambiguous_terms": [{"term": "개입", "issue": "개입 수준·대상 기능 범위가 불명확"}, {"term": "트리거 조건", "issue": "판정 주체·임계값·검출 방식 미정의"}, {"term": "권한 범위", "issue": "허용 조작 목록과 제한 기준 불명확"}, {"term": "원격 조종", "issue": "통신 수단·지연 허용치·제어 대상 불명확"}, {"term": "관제사", "issue": "자격·인원수·다중 관제 시 우선순위 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "원격 개입 트리거 판정 주체·임계값·검출 방식"}, {"rank": 2, "priority": "P0", "category": "권한", "item": "관제사 자격 요건과 허용 조작 목록·제한 범위"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "자율주행↔원격조종 제어권 전환 절차 및 전환 중 차량 상태"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "통신 두절·지연 초과 시 페일세이프 동작"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "허용 통신 지연·개입 응답 시간 한계값"}], "revised_requirement": "시스템은 [정의된 원격개입 트리거 조건] 충족 시 [자격을 갖춘 관제사]에게 제어권을 이관하고, [허용된 원격 조작 범위] 내에서만 [제어 대상]을 조작할 수 있어야 한다. 제어권 전환 중과 [통신 두절·지연 초과 조건] 발생 시 차량은 [정의된 페일세이프 상태]로 전환되며, [복귀 조건과 권한]이 충족된 경우에만 자율주행으로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "원격개입 트리거의 판정 주체와 검출 방식은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "제어권 전환 절차와 전환 중 차량 거동은 어떻게 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "통신 두절·지연 초과 시 페일세이프 동작은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "허용 통신 지연과 개입 응답 시간의 한계값은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "다중 관제사 접속 시 제어권 우선순위는 어떻게 결정하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 원격개입 트리거 조건 충족 시에만 제어권 이관이 개시되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "자격을 갖춘 관제사에게만 제어권이 부여되고 허용된 조작 범위를 벗어난 명령이 차단되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "통신 두절·지연 초과 발생 시 차량이 정의된 페일세이프 상태로 전환되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "제어권 전환 중에도 차량이 정의된 안전 거동을 유지하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 복귀 조건과 권한이 충족된 경우에만 자율주행으로 복귀하는지 확인"}]}]}, {"case_type": "risk", "id": "ocado-erith", "source_prefix": "출처 3.", "title": "Ocado Erith 물류로봇 화재", "date_label": "2021년", "news_outlet": "로봇신문", "news_date": "2021.07.20", "news_url": "https://www.irobotnews.com/news/articleView.html?idxno=25697", "summary": "로봇 3대가 그리드 위에서 충돌하며 화재 발생 (인명피해 없음, 스프링클러 작동·대피).", "case_tag": "다중 로봇 플릿 충돌 · 화재 확산", "core_point": "다중 로봇 충돌 사례를 기반으로, 충돌 위험 판정·작업 중지 범위·재개 조건을 요구사항 검토 항목으로 설정했습니다.", "tags": ["Fleet Coordination", "Collision Avoidance", "Isolation", "Fire Response"], "req_ids": ["3-1", "3-2", "3-3"], "requirements": [{"id": "3-1", "source": "출처 3. 2021년 Ocado Erith 물류센터 화재", "requirement_text": "로봇 여러대가 동시에 작업하는 경우 충돌, 작업이 중지되는 상황에 어떤 것을 기준으로 삼아야하는지 기준이 필요하다", "ambiguous_terms": [{"term": "로봇 여러대", "issue": "대수 범위와 기종 구성이 불명확"}, {"term": "동시에 작업", "issue": "동시성 판정 기준과 작업 공간 중첩 정의 없음"}, {"term": "충돌", "issue": "충돌 판정 조건과 감지 기준이 불명확"}, {"term": "작업이 중지되는 상황", "issue": "중지 유발 조건과 대상 범위가 불명확"}, {"term": "기준", "issue": "우선순위 규칙인지 안전 규격인지 대상이 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "로봇 간 우선순위 결정 규칙과 적용 순서"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "충돌 위험 판정 기준(최소 이격거리·간섭영역 정의)"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "중지 후 로봇별 유지 상태 및 재개 시 복귀 지점"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "동일 우선순위 충돌·교착(데드락) 발생 시 처리 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "충돌 감지부터 정지까지 허용 응답시간"}], "revised_requirement": "[다중 로봇 동시 작업 조건]에서 [간섭영역]과 [충돌 위험 판정 기준]을 정의하고, 이에 해당하면 [우선순위 규칙]에 따라 통과 로봇과 [중지 대상 로봇]을 결정해야 한다. 중지된 로봇은 [정의된 유지 상태]를 유지하고, [재개 조건] 충족 시 [복귀 지점]에서 작업을 재개하며 [동일 우선순위·교착 상황]은 [해소 규칙]으로 처리해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "충돌 위험 판정에 사용할 최소 이격거리와 간섭영역은 어떻게 정의하는가?"}, {"rank": 2, "priority": "P0", "question": "로봇 간 우선순위는 어떤 기준과 적용 순서로 결정하는가?"}, {"rank": 3, "priority": "P0", "question": "동일 우선순위 충돌과 교착 상태는 어떤 방식으로 해소하는가?"}, {"rank": 4, "priority": "P0", "question": "중지 후 유지 상태와 재개 시 복귀 지점은 어떻게 정의하는가?"}, {"rank": 5, "priority": "P1", "question": "충돌 감지부터 정지까지 허용 응답시간은 몇 [값]인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "다중 로봇 동시 작업 시 정의된 간섭영역과 충돌 위험 판정 기준이 적용되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "충돌 위험 판정 시 우선순위 규칙에 따라 통과 로봇과 중지 대상 로봇이 결정되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "중지된 로봇이 정의된 유지 상태를 유지하고 자동으로 해제되지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "재개 조건 충족 시에만 정의된 복귀 지점에서 작업이 재개되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "동일 우선순위 및 교착 상황에서 해소 규칙에 따라 처리되는지 확인"}]}, {"id": "3-2", "source": "출처 3. 2021년 Ocado Erith 물류센터 화재", "requirement_text": "로봇 여러대의 통신이 지연된 경우 통신상태를 확인하고 수동, 자동으로 처리할 수 있어야 한다", "ambiguous_terms": [{"term": "여러대", "issue": "대상 로봇 수와 범위가 정의되지 않음"}, {"term": "통신이 지연된 경우", "issue": "지연 판정 임계시간·측정 기준 없음"}, {"term": "통신상태를 확인", "issue": "확인 항목과 판정 결과 정의 불명확"}, {"term": "수동, 자동으로 처리", "issue": "처리 동작 내용과 모드 전환 기준 불명확"}, {"term": "할 수 있어야 한다", "issue": "주체(시스템/운용자)와 완료 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "통신 지연 판정 임계값과 측정 주기·연속 실패 횟수 기준"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "자동 처리 동작 내용(재연결, 정지, 안전위치 이동 등)과 자동·수동 모드 전환 기준"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "지연 판정 중 및 처리 후 로봇의 유지 상태와 복구 완료 후 재개 조건"}, {"rank": 4, "priority": "P1", "category": "사용자", "item": "수동 처리 주체와 조작 수단(관제 UI/현장 조작기)"}, {"rank": 5, "priority": "P1", "category": "예외", "item": "다수 로봇 동시 지연·통신 완전 두절 시 처리 우선순위"}], "revised_requirement": "시스템은 [관리 대상 로봇군]의 통신 상태를 주기적으로 감시하여 [정의된 지연 판정 기준]에 해당하면 해당 로봇을 [지연 상태]로 판정하고, [자동 처리 동작]을 수행하거나 [권한 사용자]가 [조작 수단]으로 수동 처리할 수 있어야 한다. 처리된 로봇은 [복구 확인 조건]이 충족되기 전까지 안전 상태를 유지하며 자동으로 운전을 재개하지 않아야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "통신 지연 판정 임계값과 측정 주기, 연속 실패 횟수 기준은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "자동 처리 동작은 재연결, 정지, 안전위치 이동 중 무엇으로 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "자동 처리와 수동 처리의 전환 기준과 우선순위는 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "통신 복구 확인 및 운전 재개 조건은 어떻게 판정하는가?"}, {"rank": 5, "priority": "P1", "question": "다수 로봇 동시 지연 또는 통신 완전 두절 시 처리 순서는 어떻게 정하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 지연 판정 기준에 해당하는 로봇이 지연 상태로 판정되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "지연 판정 시 정의된 자동 처리 동작이 수행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "권한 사용자가 지정된 조작 수단으로 수동 처리할 수 있는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "처리된 로봇이 복구 확인 조건 충족 전까지 자동으로 운전을 재개하지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "다수 로봇이 동시에 지연된 경우에도 각 로봇이 정의된 순서로 처리되는지 확인"}]}, {"id": "3-3", "source": "출처 3. 2021년 Ocado Erith 물류센터 화재", "requirement_text": "사고가 발생한 경우 로봇 작업 전체를 중지시키거나, 사고난 로봇만 중지시키는 기능이 필요하다", "ambiguous_terms": [{"term": "사고", "issue": "사고 판정 기준·감지 조건이 정의되지 않음"}, {"term": "로봇 작업 전체", "issue": "중지 대상 범위(라인/셀/전체 시스템)가 불명확"}, {"term": "사고난 로봇", "issue": "개별 로봇 식별 방법이 불명확"}, {"term": "중지", "issue": "정지 유형(즉시/정상 정지)과 완료 상태가 불명확"}, {"term": "기능", "issue": "자동 동작인지 수동 조작인지, 판단 주체 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "전체 중지와 개별 로봇 중지의 선택 기준(사고 등급별 분기 규칙)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "중지 후 로봇 상태(전원·브레이크·작업물 유지 여부)와 복귀 절차"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "중지 명령 실패·통신 두절·센서 오검지 시 대체 동작"}, {"rank": 4, "priority": "P0", "category": "성능", "item": "사고 감지부터 정지 완료까지 허용 시간 및 정지 거리"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "중지 실행 및 재가동 승인 주체와 권한 등급"}], "revised_requirement": "시스템은 [정의된 사고 조건] 감지 시 [사고 등급별 분기 규칙]에 따라 [전체 중지 범위] 또는 [식별된 개별 로봇]을 [정지 유형]으로 안전 상태로 전환해야 한다. 중지 상태는 자동으로 해제되지 않으며, [재가동 조건과 승인 권한]이 충족된 경우에만 정상 운전으로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "사고 감지 조건과 등급 판정 기준을 무엇으로 정의할 것인가?"}, {"rank": 2, "priority": "P0", "question": "사고 감지부터 정지 완료까지 허용 시간과 정지 거리는 얼마인가?"}, {"rank": 3, "priority": "P0", "question": "중지 명령 실패·통신 두절·센서 오검지 시 대체 동작은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "정지 유형과 중지 후 전원·브레이크·작업물 유지 상태를 어떻게 할 것인가?"}, {"rank": 5, "priority": "P1", "question": "개별 로봇 식별 및 선택적 중지를 어떤 방식으로 구현할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 사고 조건이 감지되면 대상 로봇이 정의된 안전 상태로 전환되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "사고 등급별 분기 규칙에 따라 전체 중지와 개별 로봇 중지가 구분 적용되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "개별 중지 시 대상 로봇이 정확히 식별되고 비대상 로봇이 영향받지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "중지 상태가 자동으로 해제되지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 재가동 조건과 승인 권한이 충족된 경우에만 정상 운전으로 복귀하는지 확인"}]}]}, {"case_type": "risk", "id": "starship-pedestrian", "source_prefix": "출처 4.", "title": "Starship 배달로봇 보행자 충돌", "date_label": "2026.07.30", "news_outlet": "FOX 10 Phoenix", "news_date": "2026.07.30", "news_url": "https://www.fox10phoenix.com/news/delivery-robot-disaster-asu-worker-says-food-delivering-rover-ran-her-down-campus-new-lawsuit", "summary": "로봇이 방향을 갑자기 바꾸며 보행자를 넘어뜨린 뒤, 쓰러진 사람 쪽으로 다시 후진 (미국 애리조나주립대 관련 보도).", "case_tag": "보행자 충돌 · 후진 재접근", "core_point": "보행자와 충돌한 뒤 로봇이 다시 접근한 사례를 기반으로, 측·후방 감지와 이동 재개 조건을 검토했습니다.", "tags": ["Human Detection", "Rear/Side Sensing", "Re-scan Before Move", "Emergency Stop"], "req_ids": ["4-1", "4-2", "4-3"], "requirements": [{"id": "4-1", "source": "출처 4. Starship 배달로봇 보행자 충돌 사고 (미국 애리조나주립대, 404 Media 보도)", "requirement_text": "로봇은 사람이 접근가능한 위치에 있는 경우 속도를 늦추거나 멈출 수 있어야 한다", "ambiguous_terms": [{"term": "사람이 접근가능한 위치", "issue": "거리·영역 기준과 판정 방법이 정의되지 않음"}, {"term": "접근가능한", "issue": "실제 접근인지 잠재적 접근 가능성인지 불명확"}, {"term": "속도를 늦추거나", "issue": "감속 목표 속도와 감속률 기준 없음"}, {"term": "멈출 수 있어야 한다", "issue": "정지 종류(정지 범주)와 정지 시간 기준 불명확"}, {"term": "늦추거나 멈출", "issue": "둘 중 선택 조건이 불명확해 검증 기준 성립 안 됨"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "사람 감지 영역 구분(경고영역/정지영역)과 각 영역의 거리 임계값"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "감속과 정지의 선택 기준(거리·상대속도별 전환 조건)"}, {"rank": 3, "priority": "P0", "category": "성능", "item": "감지부터 감속·정지 완료까지 허용 응답시간 및 정지거리"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "센서 고장·감지 실패·오감지 시의 동작(페일세이프)"}, {"rank": 5, "priority": "P1", "category": "상태", "item": "사람 이탈 후 정상속도 복귀 조건 및 복귀 주체"}], "revised_requirement": "로봇은 [정의된 사람 감지 영역]에서 사람이 감지되면 해당 영역 기준에 따라 [제한 속도]로 감속하거나 [정지 방식]으로 정지해야 한다. 감지 기능이 상실된 경우 로봇은 안전 상태를 유지해야 하며, 사람 이탈 후에는 [복귀 조건과 주체]가 충족된 경우에만 정상 속도로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "경고영역과 정지영역의 거리 임계값은 각각 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "감속과 정지를 구분하는 전환 조건은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "감지부터 감속·정지 완료까지 허용 응답시간과 정지거리는 얼마인가?"}, {"rank": 4, "priority": "P0", "question": "센서 고장·오감지 시 페일세이프 동작은 무엇으로 할 것인가?"}, {"rank": 5, "priority": "P1", "question": "감속 시 제한 속도와 정지 범주는 무엇으로 할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 감지 영역에서 사람이 감지되면 해당 영역 기준에 따라 감속 또는 정지가 수행되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "감지 시점부터 감속·정지 완료까지 확정된 응답시간과 정지거리 기준을 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "감지 기능이 상실되거나 오감지된 경우 로봇이 정의된 안전 상태를 유지하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "사람이 이탈하더라도 정상 속도로 자동 복귀하지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 복귀 조건과 승인 주체가 충족된 경우에만 정상 속도로 복귀하는지 확인"}]}, {"id": "4-2", "source": "출처 4. Starship 배달로봇 보행자 충돌 사고 (미국 애리조나주립대, 404 Media 보도)", "requirement_text": "로봇은 좌우뒤에 어느 위치, 거리에 보행자, 물건이 있다는 것을 파악할 수 있어야 한다", "ambiguous_terms": [{"term": "좌우뒤", "issue": "각도 범위와 기준 좌표계가 정의되지 않음"}, {"term": "어느 위치, 거리", "issue": "측정 범위·분해능·정확도 기준 없음"}, {"term": "보행자, 물건", "issue": "검출 대상의 크기·종류·최소 식별 조건 불명확"}, {"term": "파악할 수 있어야 한다", "issue": "검출률·응답시간 등 성공 판정 기준 없음"}, {"term": "있다는 것", "issue": "존재 판단만인지 추적·분류까지인지 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "검출 대상 최소 크기·형상·재질(반사특성) 및 최소 식별 조건"}, {"rank": 2, "priority": "P0", "category": "성능", "item": "검출 거리·각도 정확도, 검출률/오탐률, 갱신주기 및 최대 검출 지연시간"}, {"rank": 3, "priority": "P0", "category": "조건", "item": "보장 운용 환경(조도, 우천·먼지, 실내외, 노면 조건) 범위"}, {"rank": 4, "priority": "P1", "category": "예외", "item": "센서 가림·오염·고장·사각지대 발생 시 판정 및 축퇴 동작"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "검출 성공 판정 시험 시나리오와 합격 기준(대상 배치·속도 조합)"}], "revised_requirement": "로봇은 [정의된 후방·측방 감지 영역] 내에서 [검출 대상 정의(보행자·장애물의 최소 크기·형상 조건)]의 존재와 상대 위치·거리를 [갱신주기] 이내로 검출할 수 있어야 한다. 검출 성능은 [보장 운용 환경] 범위에서 [검출률·정확도 기준]을 만족해야 하며, [센서 가림·고장 조건] 발생 시 검출 불가 상태로 판정하고 [축퇴 동작]을 수행해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "감지 영역의 각도 범위와 기준 좌표계를 어떻게 정의할 것인가?"}, {"rank": 2, "priority": "P0", "question": "검출 대상의 최소 크기·반사특성 조건은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "검출 거리·각도 정확도, 검출률·오탐률 기준값은 얼마인가?"}, {"rank": 4, "priority": "P0", "question": "갱신주기와 최대 허용 검출 지연시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "센서 가림·오염·고장 및 사각지대를 어떻게 판정하고 축퇴 동작을 정의할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 후방·측방 감지 영역 내에서 검출 대상의 존재가 검출되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "검출 대상의 상대 위치와 거리가 정해진 정확도 기준을 만족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "검출 정보가 정의된 갱신주기 이내로 제공되는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "보장 운용 환경 범위에서 검출률·오탐률 기준을 충족하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "센서 가림·고장 발생 시 검출 불가 상태로 판정하고 정의된 축퇴 동작을 수행하는지 확인"}]}, {"id": "4-3", "source": "출처 4. Starship 배달로봇 보행자 충돌 사고 (미국 애리조나주립대, 404 Media 보도)", "requirement_text": "좌우뒤 이동을 하는 경우 주변을 충돌을 방지하기 위해 주변을 다시 감지해야 한다", "ambiguous_terms": [{"term": "좌우뒤 이동", "issue": "대상 이동 동작 정의·개시 시점 불명확"}, {"term": "주변", "issue": "감지 범위·거리·각도 미정의"}, {"term": "충돌", "issue": "충돌 판정 대상과 기준이 불명확"}, {"term": "다시 감지", "issue": "재감지 주기·시점·완료 기준 불명확"}, {"term": "방지하기 위해", "issue": "감지 후 대응 동작(정지·경고 등) 미정의"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "재감지 트리거 시점(이동 개시 전/이동 중)과 반복 주기"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "장애물 검출 시 대응 동작(감속·정지·회피) 및 이동 재개 조건"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "센서 고장·사각지대·감지 불가 시 처리 방식"}, {"rank": 4, "priority": "P1", "category": "성능", "item": "감지부터 정지까지 응답시간 및 확보 최소 안전거리"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "충돌 방지 성공 판정 기준과 시험 시나리오"}], "revised_requirement": "시스템은 [좌·우·후방 이동 동작]의 개시 전 및 이동 중 [정의된 재감지 주기]로 [정의된 감지 영역] 내 [충돌 판정 대상]을 재감지해야 한다. 장애물이 검출되면 [정의된 대응 동작]을 수행하고, [이동 재개 조건]이 충족된 경우에만 이동을 재개해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "이동 방향별 감지 영역의 거리와 각도는 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "재감지 주기와 트리거 시점은 어떻게 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "센서 고장·사각지대 발생 시 이동을 어떻게 처리할 것인가?"}, {"rank": 4, "priority": "P1", "question": "장애물 검출 시 대응은 감속·정지·회피 중 무엇인가?"}, {"rank": 5, "priority": "P1", "question": "감지부터 정지까지 허용 응답시간과 최소 안전거리는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "좌·우·후방 이동 개시 전에 정의된 감지 영역에 대한 재감지가 수행되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "이동 중 정의된 재감지 주기로 재감지가 지속 수행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "감지 영역 내 충돌 판정 대상 검출 시 정의된 대응 동작이 수행되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "센서 고장 또는 감지 불가 상태에서 이동이 허용되지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 이동 재개 조건을 충족한 경우에만 이동이 재개되는지 확인"}]}]}]}</script>
+<script id="poc-data" type="application/json">{"cases": [{"case_type": "value", "id": "plus-one-robotics-picking", "source_prefix": "출처 8.", "title": "Plus One Robotics AI 비전 피킹", "date_label": "2024.07.16", "news_outlet": "KSAT", "news_date": "2024.07.16", "news_url": "https://www.ksat.com/news/local/2024/07/16/san-antonio-company-uses-ai-for-warehouse-management-with-human-integration/", "summary": "샌안토니오의 Plus One Robotics는 창고 자동화용 로봇 시스템을 개발. 특수 3D 카메라로 피킹할 패키지·품목을 보고, AI가 이미지를 구분해 피킹 가능한 면과 품목을 판별하며 어떤 품목을 집을지 제안. CEO는 AI가 충분하지 않을 때 사람이 원격으로 개입해 로봇에게 해야 할 일을 알려주는 방식으로 보완한다고 설명. 정량 성과는 제시되지 않음.", "case_tag": "AI 비전 피킹 판단 · 사람 원격 개입", "core_point": "기사에는 AI가 부족할 때 사람이 원격으로 개입한다고 되어 있어, 요구사항 관점에서는 개입이 필요한 판단 기준과 개입 절차·권한을 정의할 필요가 있습니다.", "tags": ["3D Vision", "AI Picking Decision", "Human-in-the-loop", "Remote Intervention"], "req_ids": ["v8-1"], "requirements": [{"id": "v8-1", "source": "출처 8. San Antonio company uses AI for warehouse management with human integration (KSAT, 2024.07.16)", "requirement_text": "피킹 로봇은 AI만으로 피킹 대상을 판단하기 어려운 경우 사람이 원격으로 개입해 로봇에게 수행할 작업을 알려줄 수 있어야 한다", "ambiguous_terms": [{"term": "AI만으로 판단하기 어려운 경우", "issue": "개입 전환 임계값·판정 기준 미정의"}, {"term": "피킹 대상", "issue": "대상 품목/속성 범위 불명확"}, {"term": "사람이", "issue": "개입 권한 주체·자격 불명확"}, {"term": "원격으로 개입", "issue": "접속 경로·지연 허용치·개입 범위 불명확"}, {"term": "수행할 작업을 알려줄", "issue": "지시 항목·입력 형식·확정 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "AI 자동 판단에서 원격 개입으로 전환하는 판정 기준(신뢰도 임계값·재시도 횟수)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "개입 요청 대기 중 로봇의 유지 상태(정지·파지물 보유 여부)와 지시 수신 후 재개 절차"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "원격 지시 무응답·통신 단절 시 폴백 동작"}, {"rank": 4, "priority": "P1", "category": "성능", "item": "지시 전달 허용 지연시간 및 개입 응답 제한시간"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "개입 자격 인증 방식과 동시 개입 시 우선순위·충돌 처리"}], "revised_requirement": "피킹 로봇은 [자동 판단 불가 조건] 충족 시 작업을 [안전 대기 상태]로 유지하고 [인증된 원격 작업자]에게 개입을 요청해야 한다. 원격 작업자가 [지정된 지시 입력 수단]으로 [지시 항목]을 확정하면 로봇은 해당 지시로 작업을 재개하며, [제한시간] 내 지시가 없거나 통신이 단절되면 [폴백 동작]을 수행해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "자동 판단에서 원격 개입으로 전환하는 판정 기준(신뢰도 임계값·재시도 횟수)은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "개입 대기 중 로봇의 유지 상태와 파지물 처리 방식은 어떻게 할 것인가?"}, {"rank": 3, "priority": "P0", "question": "지시 무응답·통신 단절 시 폴백 동작은 무엇으로 할 것인가?"}, {"rank": 4, "priority": "P1", "question": "지시 전달 허용 지연시간과 개입 응답 제한시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "개입 권한 인증 방식과 동시 개입 시 충돌 처리는 어떻게 할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 자동 판단 불가 조건 충족 시 로봇이 작업을 중단하고 안전 대기 상태를 유지하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "개입 요청이 인증된 원격 작업자에게 전달되고 권한 없는 지시는 반영되지 않는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "원격 작업자가 지시 항목을 확정한 경우에만 로봇이 해당 지시로 작업을 재개하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "제한시간 내 지시가 없거나 통신이 단절되면 정의된 폴백 동작을 수행하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "동시 개입 시도가 발생해도 하나의 확정 지시만 적용되는지 확인"}], "placeholder_links": [0, 1, 4, -1, -1, 3, 2], "task_category": "Picking & Handling", "similar": [], "traceability": {"mi_to_er": [[0], [1], [2], [3], [4]], "ac_to_mi": [[0, 1], [4], [1], [2, 3], [4]], "ac_to_er": [[0, 1], [4], [1], [2, 3], [4]]}}]}, {"case_type": "value", "id": "olive-young-picking", "source_prefix": "출처 6.", "title": "CJ올리브영 경산센터 낱개 피킹 로봇", "date_label": "2025.01.20", "news_outlet": "전자신문", "news_date": "2025.01.20", "news_url": "https://m.etnews.com/20250120000142", "summary": "경산물류센터에 8종의 자동화 설비가 도입돼 물류 공정의 90% 이상이 자동화. 낱개 피킹 로봇이 AI 비전 카메라로 상품을 포착해 컨베이어에 투입하며 시간당 500개 이상 분류. 카메라·센서가 인식하지 못하는 경우를 따로 학습시켜 정확도를 높임.", "case_tag": "AI 비전 피킹 · 인식 실패 학습", "core_point": "기사에는 인식하지 못하는 경우를 따로 학습시킨다고 되어 있어, 요구사항 관점에서는 인식 성공·실패 판정 기준과 실패 시 처리 방식을 정의할 필요가 있습니다.", "tags": ["Vision Picking", "Recognition Failure", "Throughput", "Learning Feedback"], "req_ids": ["v6-1"], "requirements": [{"id": "v6-1", "source": "출처 6. [르포] CJ올리브영, \"B2B 물류 고도화로 성장 이어갈 것\"…경산센터 가보니 (전자신문, 2025.01.20)", "requirement_text": "낱개 피킹 로봇은 AI 비전 인식 카메라로 낱개 상품을 포착해 컨베이어 벨트에 투입할 수 있어야 하며, 인식하지 못한 경우를 별도로 학습시켜 정확도를 높일 수 있어야 한다", "ambiguous_terms": [{"term": "AI 비전 인식 카메라", "issue": "인식 대상 범위·성능 사양이 정의되지 않음"}, {"term": "낱개 상품", "issue": "품목 종류·크기·무게 범위가 불명확"}, {"term": "포착해", "issue": "인식인지 파지인지 동작 정의가 불명확"}, {"term": "별도로 학습시켜", "issue": "학습 주체·시점·데이터 방식이 불명확"}, {"term": "정확도를 높일 수 있어야", "issue": "기준값·목표 수치와 측정 방법이 없음"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "인식률·피킹 성공률 목표치와 측정 방법"}, {"rank": 2, "priority": "P0", "category": "성능", "item": "시간당 처리 개수 및 상품당 피킹 사이클 타임"}, {"rank": 3, "priority": "P0", "category": "조건", "item": "대상 품목의 크기·무게·형상·포장재 범위와 적재 상태"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "인식 실패·파지 실패·낙하 시 처리 절차와 재시도 횟수"}, {"rank": 5, "priority": "P1", "category": "상태", "item": "재학습 데이터 수집·모델 배포 시 로봇 운전/정지 상태 정의"}], "revised_requirement": "낱개 피킹 로봇은 [정의된 대상 품목 범위]를 비전 인식으로 검출·파지하여 [목표 인식률·피킹 성공률]과 [목표 처리 속도]를 충족하며 컨베이어에 투입해야 한다. 인식 또는 파지에 실패한 경우 [실패 처리 절차와 재시도 횟수]에 따라 처리하고, 해당 데이터를 수집해 [재학습 및 모델 적용 절차]로 정확도를 개선할 수 있어야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "인식률과 피킹 성공률의 목표치 및 측정 방법은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "대상 품목의 크기·무게·형상·포장재 허용 범위는 어디까지인가?"}, {"rank": 3, "priority": "P0", "question": "시간당 처리 개수와 상품당 피킹 사이클 타임은 얼마인가?"}, {"rank": 4, "priority": "P0", "question": "인식 실패·파지 실패·낙하 시 처리 절차와 재시도 횟수는 어떻게 정의하는가?"}, {"rank": 5, "priority": "P1", "question": "재학습 데이터 수집과 모델 배포는 로봇 운전 중과 정지 중 어느 상태에서 수행하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 대상 품목 범위 내 상품을 비전 인식으로 검출·파지해 컨베이어에 투입하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "확정된 목표 인식률 및 피킹 성공률 기준을 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "확정된 목표 처리 속도 기준을 충족하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "인식 또는 파지 실패 시 정의된 실패 처리 절차와 재시도 횟수에 따라 동작하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "실패 데이터가 수집되어 정의된 재학습 및 모델 적용 절차로 반영되는지 확인"}], "placeholder_links": [1, 0, 2, 3, 4], "task_category": "Picking & Handling", "similar": [{"other_id": "v7-1", "topic": "허용범위·성공률·장애처리 기준", "er_pairs": [[1, 0], [0, 2], [3, 1]]}], "traceability": {"mi_to_er": [[0], [2], [1], [3], [4]], "ac_to_mi": [[2], [0], [1], [3], [4]], "ac_to_er": [[1], [0], [2], [3], [4]]}}]}, {"case_type": "value", "id": "solwins-inspection", "source_prefix": "출처 9.", "title": "솔루윈스 협동로봇 품질검사 자동화", "date_label": "2024.12.16", "news_outlet": "전자신문", "news_date": "2024.12.16", "news_url": "https://www.etnews.com/20241216000006", "summary": "AI 대형비전언어모델과 협동로봇을 결합해 생산 라인에서 불량 부품을 자동으로 찾아 분류하는 솔루션을 신평산업에 적용. 불량 발생률 50% 감축, 검사 시간 절반 단축, 솔루션 적용 생산라인의 불량품 검출 정확도 93.5%.", "case_tag": "AI 비전 검사 · 불량 자동 분류", "core_point": "기사에는 검출 정확도가 제시되어 있지만, 요구사항 관점에서는 정상·불량 판정 기준과 판정 불가 시 처리 방식을 정의할 필요가 있습니다.", "tags": ["Vision Inspection", "Defect Sorting", "Pass/Fail Criteria", "Production Line"], "req_ids": ["v9-1"], "requirements": [{"id": "v9-1", "source": "출처 9. 솔루윈스, 제조 현안 해결 '품질 검사 자동화 솔루션' 개발 (전자신문, 2024.12.16)", "requirement_text": "협동로봇과 AI 비전언어모델을 결합한 검사 솔루션은 생산 라인에서 불량 부품을 자동으로 찾아 분류할 수 있어야 한다", "ambiguous_terms": [{"term": "불량 부품", "issue": "불량 판정 기준·결함 유형 범위가 정의되지 않음"}, {"term": "자동으로", "issue": "사람 개입 범위와 자동화 수준이 불명확"}, {"term": "찾아", "issue": "검출 정확도·처리 속도 기준이 없음"}, {"term": "분류", "issue": "분류 등급 수와 물리적 분류 동작 여부가 불명확"}, {"term": "결합한", "issue": "로봇과 모델 간 역할 분담·연동 방식이 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "검출 정확도·오검출/미검출 허용률 목표치"}, {"rank": 2, "priority": "P0", "category": "성능", "item": "라인 택트타임 대비 검사 처리 시간 및 처리량"}, {"rank": 3, "priority": "P0", "category": "조건", "item": "검사 대상 부품 종류와 결함 유형별 판정 기준"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "판정 불가·모델 신뢰도 미달 시 처리 방식과 사람 개입 시점"}, {"rank": 5, "priority": "P1", "category": "상태", "item": "로봇-비전모델 연동 실패 및 라인 정지 시 부품 처리 상태"}], "revised_requirement": "시스템은 [검사 대상 부품군]에 대해 [정의된 결함 유형별 판정 기준]에 따라 불량 여부를 판정하고, 협동로봇이 [분류 등급 체계]에 맞춰 물리적으로 분류해야 한다. 판정 신뢰도가 [값] 미만이거나 로봇-비전모델 연동에 실패한 경우에는 해당 부품을 [보류 처리 상태]로 이송하고 [권한 사용자]의 확인을 요청해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "검출 정확도와 오검출·미검출 허용률 목표치는 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "라인 택트타임 대비 허용 검사 처리 시간과 처리량은 얼마인가?"}, {"rank": 3, "priority": "P0", "question": "사람 개입을 요구하는 모델 신뢰도 임계값은 어떻게 정하는가?"}, {"rank": 4, "priority": "P1", "question": "비전언어모델과 로봇 제어기의 역할 분담 및 연동 방식은 무엇인가?"}, {"rank": 5, "priority": "P1", "question": "연동 실패·라인 정지 시 이송 중 부품은 어떤 상태로 처리하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 결함 유형별 판정 기준에 따라 대상 부품의 불량 여부가 판정되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "판정 결과에 따라 협동로봇이 정의된 분류 등급 체계대로 부품을 물리적으로 분류하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "판정 신뢰도가 기준값 미만인 부품이 보류 처리 상태로 이송되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "로봇과 비전언어모델 연동 실패 시 해당 부품이 자동 분류되지 않고 보류 처리되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "보류 처리된 부품이 권한 사용자의 확인 없이 후속 공정으로 진행되지 않는지 확인"}], "placeholder_links": [-1, 0, -1, 2, 4, -1], "task_category": "Vision Inspection", "similar": [], "traceability": {"mi_to_er": [[0], [1], [], [2, 4], [3, 4]], "ac_to_mi": [[2], [], [3], [4], [3]], "ac_to_er": [[], [], [2], [4], []]}}]}, {"case_type": "value", "id": "gmarket-logistics", "source_prefix": "출처 2.", "title": "G마켓 물류센터 로봇 통합 운영", "date_label": "2024.03.24", "news_outlet": "연합뉴스", "news_date": "2024.03.24", "news_url": "https://www.yna.co.kr/view/AKR20240322171000030", "summary": "동탄메가센터에 LG CNS 이종 로봇 통합 운영 솔루션 도입. 로보셔틀+피킹 로봇이 적재·피킹·운반·정리 전 과정을 수행해 공간 효율 3배 이상 증가. 현재 기술 검증 진행 중.", "case_tag": "이종 로봇 통합 운영 · 공간 효율 개선", "core_point": "적재·피킹·운반·정리 업무를 이종 로봇이 연계 수행하기 위해, 공정 범위·작업 인계·예외처리 조건을 요구사항 단계에서 구체화할 필요가 있습니다.", "tags": ["Fleet Integration", "Task Handoff", "Fault Handling", "Throughput"], "req_ids": ["v2-1"], "requirements": [{"id": "v2-1", "source": "출처 2. 적재·운반도 로봇이 '척척'…G마켓 물류센터 첨단설비 도입 (연합뉴스, 2024.03.24)", "requirement_text": "로봇 통합 운영 시스템은 적재·피킹·운반·정리 공정을 이종 로봇이 연계해 수행할 수 있어야 하며, 작업자가 설비를 조작할 수 있는 사용자 환경을 제공해야 한다", "ambiguous_terms": [{"term": "이종 로봇", "issue": "대상 로봇 종류·제조사·인터페이스 범위 미정의"}, {"term": "연계해 수행", "issue": "연계 방식·작업 이관 기준·동기화 조건 불명확"}, {"term": "적재·피킹·운반·정리 공정", "issue": "각 공정의 범위와 완료 판정 기준 미정의"}, {"term": "사용자 환경", "issue": "UI 형태·제공 매체·기능 범위 불명확"}, {"term": "설비를 조작", "issue": "조작 대상 설비와 허용 조작 권한 범위 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "연계 대상 로봇 기종·제조사별 통신 인터페이스 및 프로토콜 규격"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "공정 간 작업 이관 시점·선행조건 및 공정별 완료 판정 기준"}, {"rank": 3, "priority": "P0", "category": "권한", "item": "작업자 역할별 조작 가능 설비 범위와 권한 등급"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "로봇 통신 단절·작업 실패 시 공정 중단 및 복구 처리 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "동시 운용 로봇 대수 및 작업 지시 응답 시간 목표"}], "revised_requirement": "로봇 통합 운영 시스템은 [정의된 공정 목록]을 [연계 대상 로봇군]이 [작업 이관 기준]에 따라 연속 수행하도록 제어하고, 각 공정은 [공정별 완료 판정 기준]으로 완료를 판정해야 한다. 또한 [권한 등급별 작업자]가 [조작 대상 설비 범위]를 조작할 수 있는 사용자 환경을 제공하고, [통신 단절·작업 실패 조건] 발생 시 공정을 중단하고 [복구 절차]에 따라 재개해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "기종·제조사별 통신 인터페이스와 프로토콜을 어떤 규격으로 통합할 것인가?"}, {"rank": 2, "priority": "P0", "question": "공정 간 작업 이관 시점과 선행조건을 어떤 신호·상태로 판정할 것인가?"}, {"rank": 3, "priority": "P0", "question": "통신 단절·작업 실패 시 중단 범위와 복구 방식은 어떻게 할 것인가?"}, {"rank": 4, "priority": "P1", "question": "권한 등급별 조작 가능 설비와 제어 우선순위를 어떻게 구분할 것인가?"}, {"rank": 5, "priority": "P1", "question": "동시 운용 로봇 대수와 작업 지시 응답 시간 목표는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 공정 목록이 연계 대상 로봇군에 의해 중단 없이 연속 수행되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "공정 간 작업 이관이 정의된 이관 기준을 충족한 경우에만 수행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "각 공정이 공정별 완료 판정 기준에 따라 완료로 판정되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "통신 단절·작업 실패 조건 발생 시 공정이 중단되고 복구 절차 충족 후에만 재개되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "권한 등급별 작업자가 허용된 조작 대상 설비 범위 내에서만 조작할 수 있는지 확인"}], "placeholder_links": [-1, 4, 1, -1, 3, 3, 2, 2], "task_category": "Fleet & Handoff", "similar": [{"other_id": "v3-1", "topic": "이종로봇 통신/장애/성능 기준", "er_pairs": [[0, 3], [2, 2], [4, 4]]}], "traceability": {"mi_to_er": [[0], [1], [3], [2], [4]], "ac_to_mi": [[0], [1], [1], [3], [2]], "ac_to_er": [[0], [1], [1], [2], [3]]}}]}, {"case_type": "value", "id": "manufacturing-orchestration", "source_prefix": "출처 3.", "title": "제조업 로봇 공장 통합 운영", "date_label": "2026.07.09", "news_outlet": "네이트", "news_date": "2026.07.09", "news_url": "https://news.nate.com/view/20260709n09378", "summary": "디지털 트윈 사전검증 + VLA 기반 현장 대응 + 이기종 로봇·생산관리시스템·설비데이터 통합 관제로, 공정 지연·설비 이상 발생 시 로봇별 작업 지시와 경로를 재배정하는 체계로 확장 중 (SK AX '제조 RX 풀스택 서비스').", "case_tag": "공정 통합 관제 · 이상 대응 자동화", "core_point": "기사에서는 작업·경로 재배정 기능이 소개되지만, 재배정 판정 기준과 예외처리 조건까지는 확인하기 어렵습니다.", "tags": ["Fleet Orchestration", "Fault Detection", "Auto Reassignment", "Safety Stop"], "req_ids": ["v3-1"], "requirements": [{"id": "v3-1", "source": "출처 3. 제조업 로봇 활용, 자동 작업 넘어 공장 통합 운영으로 (네이트, 2026.07.09)", "requirement_text": "공장 통합 관제 시스템은 공정 지연이나 설비 이상이 발생한 경우, 이기종 로봇의 작업 지시와 이동 경로를 자동으로 재배정할 수 있어야 한다", "ambiguous_terms": [{"term": "공정 지연", "issue": "지연 판정 기준·임계 시간 미정의"}, {"term": "설비 이상", "issue": "이상 유형과 감지 조건이 불명확"}, {"term": "이기종 로봇", "issue": "대상 기종·인터페이스 범위 불명확"}, {"term": "자동으로", "issue": "사람 개입·승인 절차 여부 불명확"}, {"term": "재배정", "issue": "우선순위 규칙과 완료 판정 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "재배정 트리거 판정 기준과 우선순위 규칙(작업 긴급도·납기·로봇 가용성)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "재배정 시점의 진행 중 작업 처리 방식(중단·완료 후 전환)과 로봇 초기 상태 정의"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "재배정 실패·경로 충돌·통신 두절 시 대체 동작 및 안전 정지 기준"}, {"rank": 4, "priority": "P1", "category": "성능", "item": "이상 감지부터 재배정 지시 전달까지 허용 시간 및 동시 처리 로봇 대수"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "자동 재배정 결과에 대한 운영자 승인·수동 개입 권한 범위"}], "revised_requirement": "공장 통합 관제 시스템은 [정의된 공정 지연 조건] 또는 [정의된 설비 이상 조건]이 감지되면, [지원 대상 로봇군]의 작업 지시와 이동 경로를 [재배정 우선순위 규칙]에 따라 [값] 이내에 재배정해야 한다. 재배정 실패·경로 충돌·통신 두절 시에는 [대체 동작]을 수행하고, [운영자 개입 권한 범위]에 따라 수동 조정이 가능해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "공정 지연과 설비 이상의 감지 기준과 임계값은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "재배정 시 진행 중인 작업은 중단할 것인가, 완료 후 전환할 것인가?"}, {"rank": 3, "priority": "P0", "question": "재배정 실패·경로 충돌·통신 두절 시 안전 정지 기준은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "이기종 로봇 제어를 위한 지원 기종과 통신 인터페이스 범위는 어디까지인가?"}, {"rank": 5, "priority": "P1", "question": "이상 감지부터 재배정 지시 전달까지 허용 시간과 동시 처리 로봇 대수는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 공정 지연 또는 설비 이상 조건이 감지되면 재배정이 자동으로 개시되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "재배정 시 진행 중인 작업이 정의된 전환 규칙에 따라 처리되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "재배정 실패·경로 충돌·통신 두절 시 정의된 대체 동작과 안전 상태로 전환되는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "재배정 결과가 정의된 우선순위 규칙과 허용 시간 이내에 로봇에 전달되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "지원 대상 로봇군 전체에 대해 재배정 기능이 유효하며 운영자 수동 조정이 가능한지 확인"}], "placeholder_links": [0, 0, 3, -1, 4, 2, -1], "task_category": "Fleet & Handoff", "similar": [{"other_id": "v2-1", "topic": "이종로봇 통신/장애/성능 기준", "er_pairs": [[3, 0], [2, 2], [4, 4]]}, {"other_id": "3-1", "topic": "감지 기준과 허용시간 정의", "er_pairs": [[0, 0], [4, 4]]}], "traceability": {"mi_to_er": [[0], [1], [2], [4], []], "ac_to_mi": [[0], [1], [2], [0, 3], [4]], "ac_to_er": [[0], [1], [2], [4], [3]]}}]}, {"case_type": "value", "id": "dhl-stretch-unloading", "source_prefix": "출처 7.", "title": "DHL 하역 로봇 Stretch 상용 도입", "date_label": "2023", "news_outlet": "DHL Supply Chain 보도자료", "news_date": "2023", "news_url": "https://www.dhl.com/us-en/home/press/press-archive/2023/dhl-supply-chain-achieves-first-commercial-deployment-of-boston-dynamics-stretch-robot.html", "summary": "DHL Supply Chain이 보스턴 다이내믹스 Stretch를 트레일러 하역에 첫 상용 도입. 비전으로 박스를 식별하고 혼합 적재와 낙하 박스 복구를 자율 처리하며, 모든 테스트 환경에서 수작업보다 빠른 하역 속도를 기록. 사람 개입 횟수를 줄이는 방향으로 개선 계획.", "case_tag": "낙하 박스 자동 복구 · 사람 개입 감소", "core_point": "기사에는 낙하 박스 복구와 사람 개입 감소 계획이 제시되어 있어, 요구사항 관점에서는 복구 성공·실패 판정과 사람 개입 전환 조건을 정의할 필요가 있습니다.", "tags": ["Unloading", "Auto Recovery", "Human Intervention", "Mixed Stacking"], "req_ids": ["v7-1"], "requirements": [{"id": "v7-1", "source": "출처 7. DHL Supply Chain, 보스턴 다이내믹스 Stretch 로봇 첫 상용 도입 (DHL 보도자료, 2023)", "requirement_text": "하역 로봇은 트레일러 안의 박스를 식별해 컨베이어로 옮길 수 있어야 하며, 혼합 적재 상황과 낙하한 박스를 자율적으로 복구하고, 필요한 사람 개입 횟수를 줄여 나갈 수 있어야 한다", "ambiguous_terms": [{"term": "식별", "issue": "인식 대상 속성·정확도 기준이 정의되지 않음"}, {"term": "혼합 적재 상황", "issue": "혼합 유형·범위 정의 없음"}, {"term": "자율적으로 복구", "issue": "복구 완료 상태와 허용 개입 수준 불명확"}, {"term": "필요한 사람 개입 횟수를 줄여 나갈", "issue": "기준치·목표치·측정 기간 없음"}, {"term": "박스", "issue": "치수·무게·재질 범위 미지정"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "처리 대상 박스 물리 사양 범위(치수·무게·재질·라벨 상태)"}, {"rank": 2, "priority": "P0", "category": "예외", "item": "자율 복구 실패 판정 조건 및 사람 호출·정지 기준"}, {"rank": 3, "priority": "P0", "category": "검증기준", "item": "박스 식별 정확도 및 이송 성공률 합격 기준"}, {"rank": 4, "priority": "P1", "category": "성능", "item": "시간당 하역 처리량 및 낙하 복구 소요시간 상한"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "사람 개입 횟수 기준선·목표치·측정 기간"}], "revised_requirement": "하역 로봇은 [정의된 박스 사양 범위] 내 박스를 [식별 정확도 기준] 이상으로 인식해 컨베이어로 이송하고, [정의된 혼합 적재 유형]과 [낙하 박스 상황]에서 [복구 완료 상태]까지 사람 개입 없이 복구해야 한다. 복구가 [복구 실패 판정 조건]에 해당하면 안전 정지 후 사람을 호출해야 하며, 사람 개입 횟수는 [측정 기간] 동안 [기준선] 대비 [값]까지 감소해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "처리 대상 박스의 치수·무게·재질·라벨 상태 허용 범위는 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "자율 복구 실패로 판정해 정지·호출하는 조건은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "박스 식별 정확도와 이송 성공률의 합격 기준은 얼마인가?"}, {"rank": 4, "priority": "P1", "question": "지원해야 할 혼합 적재 유형과 범위는 어디까지인가?"}, {"rank": 5, "priority": "P1", "question": "시간당 하역 처리량과 낙하 복구 소요시간 상한은 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 박스 사양 범위 내 박스를 식별 정확도 기준 이상으로 인식해 컨베이어로 이송하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "정의된 혼합 적재 유형에서 사람 개입 없이 복구 완료 상태에 도달하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "낙하 박스 상황에서 자율 복구가 수행되어 정의된 복구 완료 상태에 도달하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "복구 실패 판정 조건에 해당할 때 안전 정지 후 사람 호출이 이루어지는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "측정 기간 동안 사람 개입 횟수가 기준선 대비 목표값까지 감소하는지 확인"}], "placeholder_links": [0, 2, 3, -1, -1, 1, -1, -1, -1], "task_category": "Picking & Handling", "similar": [{"other_id": "v6-1", "topic": "허용범위·성공률·장애처리 기준", "er_pairs": [[0, 1], [2, 0], [1, 3]]}], "traceability": {"mi_to_er": [[0], [1], [2], [4], []], "ac_to_mi": [[0, 2], [], [3], [1], [4]], "ac_to_er": [[0, 2], [3], [3, 4], [1], []]}}]}, {"case_type": "value", "id": "sk-innovation-robot-dog", "source_prefix": "출처 4.", "title": "SK이노베이션 순찰 로봇개", "date_label": "2024.05.26", "news_outlet": "연합뉴스", "news_date": "2024.05.26", "news_url": "https://www.yna.co.kr/view/AKR20240524120400003", "summary": "울산CLX에서 로봇개가 가스탐지·열화상·30배줌으로 주간 순찰, 사람 하루 3회 대비 4~6회 수행. 안전 문제로 현재는 주간만 운영하며, 테스트 완료 후 하반기 야간 순찰 확대 계획 ('스마트 플랜트 2.0', 연간 100억원 비용 개선 기대).", "case_tag": "주간 성과 기반 야간 확대", "core_point": "기사에는 야간 순찰 확대 전 테스트 계획이 제시되어 있어, 실제 요구사항에서는 야간 운행 조건과 테스트 완료 기준을 구체화할 필요가 있습니다.", "tags": ["Autonomous Patrol", "Low-light Detection", "Fail-safe", "Approval Gate"], "req_ids": ["v4-1"], "requirements": [{"id": "v4-1", "source": "출처 4. [르포] 로봇개가 공장 순찰을…SK이노베이션 '스마트 플랜트 2.0' (연합뉴스, 2024.05.26)", "requirement_text": "로봇개는 주간 순찰에서 검증된 이상 감지·알림 기능을 바탕으로, 테스트 완료 후 사람의 개입 없이 야간 순찰까지 확대 수행할 수 있어야 한다", "ambiguous_terms": [{"term": "검증된", "issue": "검증 주체·합격 기준·증빙 방법 미정의"}, {"term": "이상 감지", "issue": "이상의 정의와 탐지 대상 항목이 불명확"}, {"term": "테스트 완료 후", "issue": "테스트 범위와 완료 판정 기준 부재"}, {"term": "사람의 개입 없이", "issue": "자율 수준과 예외 시 개입 허용 범위 불명확"}, {"term": "야간 순찰까지 확대 수행", "issue": "야간 정의(시간대)와 확대 범위·성능 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "야간 확대 승인을 위한 테스트 항목·합격 기준과 판정 주체"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "야간 시간대 정의 및 확대 대상 구역·경로 범위"}, {"rank": 3, "priority": "P0", "category": "성능", "item": "저조도 환경에서의 이상 감지율·오탐율 및 감지 거리 기준"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "감지 실패·통신 두절·배터리 부족·장애물 발생 시 대응 동작과 복귀 상태"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "야간 알림 수신 주체와 원격 개입·순찰 중단 권한 범위"}], "revised_requirement": "로봇개는 [정의된 이상 항목]에 대한 감지·알림 성능이 [야간 확대 승인 기준]을 충족하고 [판정 권한자]의 승인을 받은 경우, [야간 시간대]의 [지정 순찰 구역·경로]를 사람의 상시 개입 없이 순찰해야 한다. [감지 실패·통신 두절·배터리 부족 등 예외 조건] 발생 시에는 [정의된 안전 동작]으로 전환하고 [알림 수신 주체]에게 통보해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "야간 확대 승인을 위한 테스트 항목과 합격 기준은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "저조도 환경에서 요구되는 감지율·오탐율·감지 거리는 얼마인가?"}, {"rank": 3, "priority": "P0", "question": "통신 두절·배터리 부족 시 로봇의 안전 동작과 복귀 상태는 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "야간 순찰 대상 시간대와 구역·경로 범위는 어떻게 정의하는가?"}, {"rank": 5, "priority": "P1", "question": "야간 알림 수신 주체와 원격 개입·순찰 중단 권한은 어디까지 허용하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 야간 확대 승인 기준을 충족하고 권한자 승인이 있는 경우에만 야간 순찰이 개시되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "저조도 야간 환경에서 정의된 이상 항목에 대한 감지·알림 성능 기준을 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "감지 실패·통신 두절·배터리 부족 발생 시 정의된 안전 동작으로 전환되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "예외 조건 발생 시 지정된 알림 수신 주체에게 통보가 이루어지는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "지정된 야간 시간대와 순찰 구역·경로 범위 내에서만 자율 순찰이 수행되는지 확인"}], "placeholder_links": [-1, 0, 4, 3, 3, 2, 2, 4], "task_category": "Autonomous Patrol", "similar": [], "traceability": {"mi_to_er": [[0], [3], [1], [2], [4]], "ac_to_mi": [[0], [2], [3], [3, 4], [1]], "ac_to_er": [[0], [1], [2], [2, 4], [3]]}}]}, {"case_type": "value", "id": "kakaomobility-hotel-delivery", "source_prefix": "출처 5.", "title": "카카오모빌리티 호텔 로봇 배송", "date_label": "2026.03.16", "news_outlet": "연합뉴스", "news_date": "2026.03.16", "news_url": "https://www.yna.co.kr/view/AKR20260316051700017?section=search", "summary": "로보티즈와 협업해 호텔 실내외 배송로봇 서비스 상용화. 도입 후 가동률 8배 상승, 배송 성공률 100% 달성. QR 주문 시스템과 결합해 A호텔 룸서비스 매출 약 3배 증가.", "case_tag": "가동률·매출 증가 지속 조건", "core_point": "기사에는 배송 성공률 성과가 제시되어 있지만, 요구사항 관점에서는 배송 완료·실패 판정 및 예외처리 기준을 추가로 정의할 필요가 있습니다.", "tags": ["System Integration", "Delivery Completion", "Exception Handling", "Order State"], "req_ids": ["v5-1"], "requirements": [{"id": "v5-1", "source": "출처 5. 호텔 룸서비스까지 로봇이 배송…카카오모빌리티 통했다 (연합뉴스, 2026.03.16)", "requirement_text": "로봇 배송 플랫폼은 QR 기반 주문 시스템과 연동하여, 룸서비스 주문 접수부터 로봇 배송 완료까지의 상태를 처리할 수 있어야 한다", "ambiguous_terms": [{"term": "연동", "issue": "인터페이스 방식·데이터 항목·방향이 불명확"}, {"term": "상태", "issue": "상태 종류와 전이 정의가 없음"}, {"term": "처리할 수 있어야 한다", "issue": "처리 동작(수신/갱신/전달)의 범위가 불명확"}, {"term": "QR 기반 주문 시스템", "issue": "대상 시스템 식별과 규격이 불명확"}, {"term": "배송 완료", "issue": "완료 판정 기준과 확인 주체가 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "연동 인터페이스 규격(프로토콜·API 엔드포인트·데이터 항목·호출 방향)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "주문·배송 상태 값 집합과 상태 전이 규칙"}, {"rank": 3, "priority": "P0", "category": "검증기준", "item": "배송 완료 판정 기준과 확인 주체(수령 확인 수단)"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "연동 실패·주문 취소·수령 지연·로봇 이동 실패 시 처리 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "상태 동기화 주기 및 반영 지연 허용 한계"}], "revised_requirement": "로봇 배송 플랫폼은 [지정된 QR 주문 시스템]과 [정의된 연동 인터페이스]를 통해 주문 접수부터 배송 완료까지 [정의된 주문·배송 상태 집합]을 [정의된 상태 전이 규칙]에 따라 수신·갱신·전달해야 한다. 배송 완료는 [완료 판정 기준]과 [수령 확인 수단]으로 확정되며, [정의된 예외 상황] 발생 시 [지정된 예외 처리 절차]를 수행해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "QR 주문 시스템과의 연동 프로토콜·API 규격과 호출 방향은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "주문·배송 상태 값 집합과 전이 규칙은 어떻게 정의할 것인가?"}, {"rank": 3, "priority": "P0", "question": "배송 완료 판정 기준과 수령 확인 수단은 무엇으로 할 것인가?"}, {"rank": 4, "priority": "P0", "question": "연동 실패·주문 취소·수령 지연·이동 실패 시 처리 방식은 무엇인가?"}, {"rank": 5, "priority": "P1", "question": "상태 동기화 주기와 허용 반영 지연은 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "지정된 QR 주문 시스템과 정의된 인터페이스를 통해 주문 접수 정보가 수신되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "주문 접수부터 배송 완료까지 정의된 상태 집합이 전이 규칙에 따라 갱신·전달되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "배송 완료가 정의된 완료 판정 기준과 수령 확인 수단으로만 확정되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "연동 실패·주문 취소·수령 지연·이동 실패 시 지정된 예외 처리 절차가 수행되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "상태 변경이 정의된 허용 반영 지연 내에 주문 시스템과 동기화되는지 확인"}], "placeholder_links": [-1, 0, 1, 1, 2, 2, 3, 3], "task_category": "Delivery", "similar": [{"other_id": "v1-1", "topic": "배송 예외처리 및 수령확인", "er_pairs": [[2, 1], [3, 2]]}], "traceability": {"mi_to_er": [[0], [1], [2], [3], [4]], "ac_to_mi": [[0], [1], [2], [3], [4]], "ac_to_er": [[0], [1], [2], [3], [4]]}}]}, {"case_type": "value", "id": "chungnam-hospital-robot", "source_prefix": "출처 1.", "title": "충남대병원 약제 이송 로봇 '드림이'", "date_label": "2026.06.17", "news_outlet": "연합뉴스", "news_date": "2026.06.17", "news_url": "https://www.yna.co.kr/view/AKR20260617126300063", "summary": "1호 '다송이'가 7개월간 검체·약제 이송 8천 건 이상을 수행해 지원인력 5명분 업무량의 약 7배를 처리. 2호 '드림이'는 원내 약국~병동 정규 약제 배송 자동화에 집중해 지원인력·간호사의 반복 왕래 업무를 줄일 것으로 기대.", "case_tag": "반복 업무 자동화 · 처리량 확대", "core_point": "기사에서 확인된 약제 이송 업무를 요구사항으로 전환하면, 배송 대상·인계 완료·예외처리 조건을 추가로 정의할 필요가 있습니다.", "tags": ["Automated Delivery", "Access Control", "Exception Handling", "Throughput"], "req_ids": ["v1-1"], "requirements": [{"id": "v1-1", "source": "출처 1. 충남대병원, 자율주행 약제 이송 로봇 2호 '드림이' 도입 (연합뉴스, 2026.06.17)", "requirement_text": "로봇은 원내 약국에서 병동까지 정규 약제를 자동으로 배송하여, 지원인력과 간호사가 반복적으로 약국을 오가는 업무를 대체할 수 있어야 한다", "ambiguous_terms": [{"term": "정규 약제", "issue": "대상 약제 종류·마약류/냉장 포함 여부 불명확"}, {"term": "자동으로", "issue": "사람 개입 범위(적재·인계·문/엘리베이터) 불명확"}, {"term": "배송", "issue": "완료 기준(인계 대상·수령 확인 방식) 불명확"}, {"term": "병동까지", "issue": "목적지 단위(병동/간호스테이션/병실) 불명확"}, {"term": "대체할 수 있어야", "issue": "대체 비율·성능 목표가 정량화되지 않음"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "배송 대상 약제 범위(마약류·향정·냉장·응급 제외 여부)와 적재 용량·보관 조건"}, {"rank": 2, "priority": "P0", "category": "검증기준", "item": "배송 완료 판정 기준(인계 대상자, 본인확인·수령 서명 방식)"}, {"rank": 3, "priority": "P0", "category": "권한", "item": "약제함 잠금 해제 권한 및 인증 수단(간호사·약사 식별)"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "수령자 부재·경로 차단·배터리 부족·오배송 시 처리 절차와 약제 회수 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "1회 배송 소요시간·일일 처리 건수·정시 도착률 등 대체 목표치"}], "revised_requirement": "로봇은 [배송 허용 약제 범위]를 원내 약국에서 [지정 인계 지점]까지 운반하고, [인증된 수령자]의 [수령 확인 수단]을 통해 인계가 확인된 경우에만 배송 완료로 처리해야 한다. [배송 예외 상황] 발생 시 약제함은 잠금을 유지한 채 [예외 처리 절차]에 따라 회수·재배송되어야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "마약류·향정·냉장 약제를 배송 범위에 포함할 것인가?"}, {"rank": 2, "priority": "P0", "question": "약제함 잠금 해제 인증 수단은 무엇으로 할 것인가?"}, {"rank": 3, "priority": "P0", "question": "수령자 부재·경로 차단·배터리 부족 시 회수 절차는 어떻게 할 것인가?"}, {"rank": 4, "priority": "P1", "question": "문·엘리베이터 통과를 로봇이 자율 수행할 것인가, 사람이 개입할 것인가?"}, {"rank": 5, "priority": "P1", "question": "1회 배송 소요시간과 일일 처리 건수 목표치는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 배송 허용 약제 범위에 해당하는 약제만 배송 대상으로 처리되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "인증된 수령자의 수령 확인이 있는 경우에만 약제함 잠금이 해제되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "인계 확인이 완료된 경우에만 배송 완료로 처리되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "배송 예외 상황에서 약제함이 잠금 상태를 유지하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "예외 발생 시 정의된 절차에 따라 회수 또는 재배송이 수행되는지 확인"}], "placeholder_links": [0, -1, -1, 1, 2, 2], "task_category": "Delivery", "similar": [{"other_id": "v5-1", "topic": "배송 예외처리 및 수령확인", "er_pairs": [[1, 2], [2, 3]]}], "traceability": {"mi_to_er": [[0], [1], [1], [2, 3], [4]], "ac_to_mi": [[0], [1, 2], [1], [3], [3]], "ac_to_er": [[0], [1], [1], [2], [2, 3]]}}]}, {"case_type": "risk", "id": "goseong-cobot", "source_prefix": "출처 1.", "title": "경남 고성 협동로봇 사고", "date_label": "2023년", "news_outlet": "경향신문", "news_date": "2023.11.08", "news_url": "https://www.khan.co.kr/article/202311081103001", "summary": "협동로봇이 작업자를 상자로 착각해 컨베이어벨트에 밀착시켜 사망.", "case_tag": "사람/작업 대상 오인 · 비상정지 체계 미비", "core_point": "사람이 작업영역에 있는 상태에서 로봇이 정지하지 않고 동작해 사망 사고로 이어짐.", "tags": ["Human Detection", "Manual Stop / Safe Stop", "Priority Rule", "Restart Condition"], "req_ids": ["1-1", "1-2", "1-3"], "requirements": [{"id": "1-1", "source": "출처 1. 2023년 경남 고성 파프리카 선별장 협동로봇 사망 사고", "requirement_text": "비상상황에서 작동을 수동으로 중단하는 절차가 필요하다", "ambiguous_terms": [{"term": "비상상황", "issue": "판정 조건·트리거가 정의되지 않음"}, {"term": "작동", "issue": "중단 대상 기능·범위가 불명확"}, {"term": "수동으로", "issue": "조작 주체와 조작 수단이 불명확"}, {"term": "중단", "issue": "목표 정지 상태와 완료 기준이 불명확"}, {"term": "절차", "issue": "문서인지 시스템 기능인지 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "비상상황 판정 조건 및 중단 트리거 정의"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "중단 대상 기능·설비 범위"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "중단 완료 시 목표 정지 상태와 유지 항목"}, {"rank": 4, "priority": "P0", "category": "성능", "item": "중단 명령 후 정지 완료 허용 시간"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "중단 조작 주체·수단 및 재가동 승인 권한"}], "revised_requirement": "시스템은 [정의된 비상 조건] 발생 시 [권한 사용자]가 [수동 중단 수단]으로 [중단 대상 설비·기능]을 [목표 정지 상태]로 전환할 수 있어야 한다. 중단 상태는 자동 해제되지 않으며, [재가동 조건과 승인 권한]이 충족된 경우에만 정상 운전으로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "비상상황 판정 트리거는 어떤 신호·조건으로 검출하는가?"}, {"rank": 2, "priority": "P0", "question": "중단 대상 설비·기능의 범위는 어디까지인가?"}, {"rank": 3, "priority": "P0", "question": "정지 방식과 목표 정지 상태에서 유지할 항목은 무엇인가?"}, {"rank": 4, "priority": "P0", "question": "중단 명령 후 허용 정지 완료 시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "전원·통신 이상 시 수동 중단 수단을 어떻게 동작시킬 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 비상 조건 발생 시 권한 사용자가 수동 중단 수단으로 대상 설비를 중단시킬 수 있는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "중단 명령 시 대상 설비·기능이 정의된 목표 정지 상태로 전환되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "중단 상태가 자동으로 해제되지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "정의된 재가동 조건과 승인 권한이 충족된 경우에만 정상 운전으로 복귀하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "전원·통신 이상 상황에서도 수동 중단 수단이 유효하게 동작하는지 확인"}], "placeholder_links": [0, -1, 4, 1, 2, -1], "task_category": "Human Safety", "similar": [{"other_id": "3-3", "topic": "정지 판정·방식·시간 기준", "er_pairs": [[0, 0], [2, 3], [3, 1]]}, {"other_id": "4-3", "topic": "이상상황 대응 방식 및 허용시간", "er_pairs": [[2, 3], [3, 4], [4, 2]]}], "traceability": {"mi_to_er": [[0], [1], [2], [3], [4]], "ac_to_mi": [[0, 1, 4], [2], [4], [4], [4]], "ac_to_er": [[0, 1, 4], [2], [], [], [4]]}}, {"id": "1-2", "source": "출처 1. 2023년 경남 고성 파프리카 선별장 협동로봇 사망 사고", "requirement_text": "사람과 상자가 같이 있는 상황에서 사람 중심으로 고려해야 하지만 상황에 따라 어느 것을 기준으로 두고 움직일지 정의가 필요하다", "ambiguous_terms": [{"term": "같이 있는 상황", "issue": "동시 검출 판정 기준(거리·시야·시간)이 불명확"}, {"term": "사람 중심으로 고려", "issue": "우선순위 처리 방식과 결과 동작이 불명확"}, {"term": "상황에 따라", "issue": "분기 조건 목록이 정의되지 않음"}, {"term": "어느 것을 기준으로 두고", "issue": "기준 대상 선택 규칙이 미정"}, {"term": "움직일지", "issue": "대상 거동(주행·정지·회피) 범위가 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "사람·상자 동시 검출 판정 기준(거리·각도·지속시간)"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "사람 우선/상자 기준 전환 상황 목록과 분기 규칙"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "기준 대상별 로봇 거동 정의(감속·정지·회피·우회)"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "사람·상자 오분류 및 검출 실패 시 기본 동작"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "기준 선택 정확도 및 안전거리 확보 판정 기준"}], "revised_requirement": "시스템은 [사람·상자 동시 검출 조건]이 성립하면 [정의된 분기 상황 목록]에 따라 기준 대상을 선택하되, 기본값은 사람을 우선하여 [기준 대상별 거동]을 수행해야 한다. 대상 분류가 불확실하거나 검출에 실패한 경우에는 사람으로 간주하여 [안전 기본 동작]을 수행해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "사람·상자 동시 검출은 어떤 거리·각도·지속시간 기준으로 판정하는가?"}, {"rank": 2, "priority": "P0", "question": "사람 우선에서 상자 기준으로 전환되는 상황은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "기준 대상별 거동(감속·정지·회피·우회)은 어떻게 구분하는가?"}, {"rank": 4, "priority": "P0", "question": "분류 불확실·검출 실패 시 기본 동작은 무엇으로 하는가?"}, {"rank": 5, "priority": "P1", "question": "기준 선택 정확도와 안전거리 확보의 합격 기준은 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "사람과 상자가 동시에 검출된 경우 정의된 조건 판정에 따라 동시 검출 상황으로 인식하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "기본 상태에서 사람을 기준 대상으로 우선 선택하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "정의된 분기 상황에 해당할 때만 상자를 기준 대상으로 전환하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "선택된 기준 대상에 대해 정의된 거동을 수행하는지 확인"}, {"rank": 5, "priority": "P0", "criterion": "대상 분류가 불확실하거나 검출에 실패한 경우 사람으로 간주해 안전 기본 동작을 수행하는지 확인"}], "placeholder_links": [0, 1, 2, 3], "task_category": "Human Safety", "similar": [{"other_id": "4-3", "topic": "충돌 회피 대응 및 안전거리 기준", "er_pairs": [[2, 3], [3, 2], [4, 4]]}, {"other_id": "4-1", "topic": "위험 감지 시 거동 결정", "er_pairs": [[2, 1], [3, 3]]}], "traceability": {"mi_to_er": [[0], [1], [2], [3], [4]], "ac_to_mi": [[0], [1], [1], [2], [3]], "ac_to_er": [[0], [1], [1], [2], [3]]}}, {"id": "1-3", "source": "출처 1. 2023년 경남 고성 파프리카 선별장 협동로봇 사망 사고", "requirement_text": "사람과 사람이 아닌 것을 정확히 구분하는 기준을 관리할 수 있어야 한다", "ambiguous_terms": [{"term": "정확히", "issue": "정확도 지표·허용 오류율 기준 없음"}, {"term": "사람이 아닌 것", "issue": "대상 범위와 분류 항목이 정의되지 않음"}, {"term": "구분", "issue": "판정 방식과 출력 형태가 불명확"}, {"term": "기준", "issue": "임계값·규칙·모델 중 무엇인지 불명확"}, {"term": "관리", "issue": "조회/수정/이력·권한 범위가 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "검증기준", "item": "사람/비사람 판정 정확도 지표와 오탐·미탐 허용 한계치"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "판정 대상 입력 범위와 비사람 분류 항목 목록"}, {"rank": 3, "priority": "P0", "category": "조건", "item": "관리 대상 기준의 형태(임계값·규칙·모델)와 변경 가능 범위"}, {"rank": 4, "priority": "P0", "category": "권한", "item": "기준 조회·수정·배포 주체별 권한 구분"}, {"rank": 5, "priority": "P1", "category": "예외", "item": "판정 불가·저신뢰도 입력 시 처리 방식"}], "revised_requirement": "시스템은 [정의된 입력 범위] 내 대상을 사람과 [정의된 비사람 분류 항목]으로 판정하고, 그 판정에 사용되는 [관리 대상 기준 형태]를 [권한 사용자]가 조회·변경·배포할 수 있어야 한다. 판정 결과는 [정확도 지표] 기준 [값]을 충족해야 하며, [저신뢰도·판정 불가 조건]에서는 [정의된 안전 처리]를 따라야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "사람/비사람 판정의 정확도 지표와 오탐·미탐 허용 한계치는 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "판정 대상 입력 범위와 비사람 분류 항목은 무엇으로 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "관리 대상 기준은 임계값·규칙·모델 중 무엇이며 변경 가능 범위는 어디까지인가?"}, {"rank": 4, "priority": "P1", "question": "기준 변경 내용을 운전 중 시스템에 어떤 방식으로 배포·적용할 것인가?"}, {"rank": 5, "priority": "P1", "question": "저신뢰도 또는 판정 불가 입력 시 시스템은 어떤 상태로 동작해야 하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 입력 범위 내 대상을 사람과 비사람 분류 항목으로 판정하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "판정 결과가 확정된 정확도 지표 및 오탐·미탐 허용 한계치를 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "저신뢰도 또는 판정 불가 조건에서 정의된 안전 처리로 동작하는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "권한 사용자만 관리 대상 기준을 조회·변경·배포할 수 있는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "변경된 기준이 정의된 배포 절차를 통해 판정에 실제로 적용되는지 확인"}], "placeholder_links": [1, 1, 2, -1, 0, 0, 4, 4], "task_category": "Human Safety", "similar": [{"other_id": "4-2", "topic": "인식 정확도 및 예외 처리 기준", "er_pairs": [[0, 2], [4, 4]]}], "traceability": {"mi_to_er": [[0], [1], [2], [], [4]], "ac_to_mi": [[1], [0], [4], [3], [2]], "ac_to_er": [[1], [0], [4], [], [2, 3]]}}]}, {"case_type": "risk", "id": "songdo-delivery", "source_prefix": "출처 2.", "title": "인천 송도 배달로봇 충돌", "date_label": "2024.12.3 사고 / 2024.12.18 보도", "news_outlet": "연합뉴스", "news_date": "2024.12.18", "news_url": "https://www.yna.co.kr/view/AKR20241218160000065", "summary": "자율주행 로직은 적신호 시 정지하도록 설계됐으나, 관제사가 원격조종으로 개입해 적신호 상태에서 횡단보도를 건너다 승용차와 충돌. 충돌 후에도 원격조종 중 로봇이 한 번 더 움직여 2차 손상 발생.", "case_tag": "원격조종 개입 · 안전 로직 우회", "core_point": "자율주행 안전 로직이 있었지만 사람의 원격 개입이 이를 우회할 수 있었고, 개입 중 안전 규칙이 유지되지 않음.", "tags": ["Teleoperation", "Override", "Permission", "Safety Interlock"], "req_ids": ["2-1", "2-2", "2-3"], "requirements": [{"id": "2-1", "source": "출처 2. 인천 송도 배달로봇-승용차 충돌 (연합뉴스, 2024.12.18 보도, 사고 발생 12.3)", "requirement_text": "로봇은 원격 조종 상태에서도 신호등 규정을 위반해서 이동해서는 안 된다", "ambiguous_terms": [{"term": "원격 조종 상태", "issue": "자율/수동 전환 조건 및 상태 판정 기준 미정의"}, {"term": "신호등 규정", "issue": "적용 법규·신호 종류(보행/차량) 범위 불명확"}, {"term": "위반", "issue": "정지선·진입시점 등 판정 기준 부재"}, {"term": "이동", "issue": "주행·회전·미소 이동 포함 범위 불명확"}, {"term": "해서는 안 된다", "issue": "금지 시 시스템 동작(정지·경고·차단) 미정의"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "신호 인식 수단과 신호 상태 판정 기준(적색·황색·점멸 포함)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "위반 예상 시 시스템 동작(정지·감속·명령 차단)과 정지 위치"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "신호 인식 실패·통신 지연/두절 시 기본 동작(fail-safe)"}, {"rank": 4, "priority": "P1", "category": "권한", "item": "긴급차량 양보·교통경찰 수신호 등 조종자 오버라이드 허용 조건과 권한"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "신호 인지부터 정지 완료까지 허용 응답시간 및 정지거리"}], "revised_requirement": "로봇은 [원격 조종 상태]를 포함한 모든 운행 모드에서 [적용 신호 규정]에 따른 [정지 신호 상태]를 판정하고, 위반이 예상되면 조종 명령과 무관하게 [정지 기준 위치] 이전에 정지해야 한다. 신호 인식 실패·통신 이상 시에는 [기본 안전 동작]을 수행하며, [허용된 오버라이드 조건과 권한]에서만 예외 이동을 허용한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "신호 상태는 어떤 수단으로 인식하고 판정하는가?"}, {"rank": 2, "priority": "P0", "question": "위반 예상 시 정지·감속·명령 차단 중 무엇을 적용하는가?"}, {"rank": 3, "priority": "P0", "question": "신호 인식 실패·통신 두절 시 기본 동작은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "신호 인지부터 정지 완료까지 허용 응답시간과 정지거리는 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "수신호·긴급차량 상황의 오버라이드는 어떻게 구현하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "원격 조종을 포함한 모든 운행 모드에서 정지 신호 상태를 판정하는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "위반이 예상되면 조종 명령과 무관하게 정지 기준 위치 이전에 정지하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "신호 인식 실패 또는 통신 이상 시 정의된 기본 안전 동작을 수행하는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "허용된 오버라이드 조건과 권한이 충족된 경우에만 예외 이동이 허용되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "신호 인지부터 정지 완료까지 확정된 응답시간·정지거리 기준을 충족하는지 확인"}], "placeholder_links": [-1, -1, 0, 3, 2, 4], "task_category": "Remote Operation", "similar": [], "traceability": {"mi_to_er": [[0], [1], [2], [4], [3]], "ac_to_mi": [[0], [1], [2], [3], [4]], "ac_to_er": [[0], [1], [2], [4], [3]]}}, {"id": "2-2", "source": "출처 2. 인천 송도 배달로봇-승용차 충돌 (연합뉴스, 2024.12.18 보도, 사고 발생 12.3)", "requirement_text": "사고(충돌) 발생 직후에는 원격 조종을 포함해 로봇의 추가 이동을 제한해야 한다", "ambiguous_terms": [{"term": "사고(충돌) 발생", "issue": "충돌 판정 기준·감지 방식이 정의되지 않음"}, {"term": "직후", "issue": "적용 시점과 지속 시간이 불명확"}, {"term": "원격 조종을 포함해", "issue": "포함되는 제어 경로 범위가 불명확"}, {"term": "추가 이동", "issue": "대상 동작(주행·관절·회전) 범위가 불명확"}, {"term": "제한", "issue": "정지·감속·금지 중 목표 상태와 해제 조건이 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "충돌 판정 기준(센서 종류·임계값)과 오탐 처리"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "이동 제한 진입 시 목표 상태(즉시정지·감속정지)와 유지 항목"}, {"rank": 3, "priority": "P0", "category": "권한", "item": "제한 해제 주체·절차 및 재가동 승인 조건"}, {"rank": 4, "priority": "P1", "category": "예외", "item": "2차 위험 회피를 위한 예외 이동 허용 범위"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "충돌 감지부터 이동 차단까지 허용 응답 시간"}], "revised_requirement": "시스템은 [정의된 충돌 판정 조건] 감지 시 [값] 이내에 원격 조종을 포함한 [제어 경로 전체]의 [제한 대상 동작]을 차단하고 로봇을 [목표 안전 상태]로 전환해야 한다. 이동 제한은 자동으로 해제되지 않으며, [권한 사용자]의 [재가동 승인 절차]가 완료된 경우에만 해제되고 [2차 위험 회피용 예외 이동]만 허용한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "충돌 판정에 사용할 센서와 임계값은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "오탐 발생 시 판정 로직은 어떻게 처리할 것인가?"}, {"rank": 3, "priority": "P0", "question": "이동 제한 진입 시 목표 상태는 즉시정지인가 감속정지인가?"}, {"rank": 4, "priority": "P1", "question": "충돌 감지부터 이동 차단까지 허용 응답 시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "원격 조종 등 외부 제어 경로는 어떤 방식으로 차단할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 충돌 판정 조건 감지 시 로봇이 목표 안전 상태로 전환되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "원격 조종을 포함한 모든 제어 경로의 이동 명령이 차단되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "이동 제한 상태가 자동으로 해제되지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "권한 사용자의 재가동 승인 절차가 완료된 경우에만 제한이 해제되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "제한 상태에서 2차 위험 회피용 예외 이동만 허용되는지 확인"}], "placeholder_links": [0, 3, 4, -1, 2, -1, -1, -1], "task_category": "Human Safety", "similar": [{"other_id": "3-3", "topic": "사고 감지 및 정지 대응 기준", "er_pairs": [[0, 0], [3, 1], [2, 3]]}, {"other_id": "1-1", "topic": "정지 방식과 허용 응답시간 기준", "er_pairs": [[2, 2], [3, 3]]}], "traceability": {"mi_to_er": [[0, 1], [2], [], [], [3]], "ac_to_mi": [[0, 1], [1], [2], [2], [3]], "ac_to_er": [[0, 1, 2], [4], [], [], []]}}, {"id": "2-3", "source": "출처 2. 인천 송도 배달로봇-승용차 충돌 (연합뉴스, 2024.12.18 보도, 사고 발생 12.3)", "requirement_text": "관제사가 원격 조종으로 개입하는 경우의 트리거 조건과 권한 범위를 정의해야 한다", "ambiguous_terms": [{"term": "개입", "issue": "개입 수준·대상 기능 범위가 불명확"}, {"term": "트리거 조건", "issue": "판정 주체·임계값·검출 방식 미정의"}, {"term": "권한 범위", "issue": "허용 조작 목록과 제한 기준 불명확"}, {"term": "원격 조종", "issue": "통신 수단·지연 허용치·제어 대상 불명확"}, {"term": "관제사", "issue": "자격·인원수·다중 관제 시 우선순위 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "원격 개입 트리거 판정 주체·임계값·검출 방식"}, {"rank": 2, "priority": "P0", "category": "권한", "item": "관제사 자격 요건과 허용 조작 목록·제한 범위"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "자율주행↔원격조종 제어권 전환 절차 및 전환 중 차량 상태"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "통신 두절·지연 초과 시 페일세이프 동작"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "허용 통신 지연·개입 응답 시간 한계값"}], "revised_requirement": "시스템은 [정의된 원격개입 트리거 조건] 충족 시 [자격을 갖춘 관제사]에게 제어권을 이관하고, [허용된 원격 조작 범위] 내에서만 [제어 대상]을 조작할 수 있어야 한다. 제어권 전환 중과 [통신 두절·지연 초과 조건] 발생 시 차량은 [정의된 페일세이프 상태]로 전환되며, [복귀 조건과 권한]이 충족된 경우에만 자율주행으로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "원격개입 트리거의 판정 주체와 검출 방식은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "제어권 전환 절차와 전환 중 차량 거동은 어떻게 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "통신 두절·지연 초과 시 페일세이프 동작은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "허용 통신 지연과 개입 응답 시간의 한계값은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "다중 관제사 접속 시 제어권 우선순위는 어떻게 결정하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 원격개입 트리거 조건 충족 시에만 제어권 이관이 개시되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "자격을 갖춘 관제사에게만 제어권이 부여되고 허용된 조작 범위를 벗어난 명령이 차단되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "통신 두절·지연 초과 발생 시 차량이 정의된 페일세이프 상태로 전환되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "제어권 전환 중에도 차량이 정의된 안전 거동을 유지하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 복귀 조건과 권한이 충족된 경우에만 자율주행으로 복귀하는지 확인"}], "placeholder_links": [0, -1, -1, -1, 3, 2, -1], "task_category": "Remote Operation", "similar": [], "traceability": {"mi_to_er": [[0], [4], [1], [2], [3]], "ac_to_mi": [[0], [1], [3], [2], [2]], "ac_to_er": [[0], [4], [2], [1], [1]]}}]}, {"case_type": "risk", "id": "ocado-erith", "source_prefix": "출처 3.", "title": "Ocado Erith 물류로봇 화재", "date_label": "2021년", "news_outlet": "로봇신문", "news_date": "2021.07.20", "news_url": "https://www.irobotnews.com/news/articleView.html?idxno=25697", "summary": "로봇 3대가 그리드 위에서 충돌하며 화재 발생 (인명피해 없음, 스프링클러 작동·대피).", "case_tag": "다중 로봇 플릿 충돌 · 화재 확산", "core_point": "다중 로봇 충돌 사례를 기반으로, 충돌 위험 판정·작업 중지 범위·재개 조건을 요구사항 검토 항목으로 설정했습니다.", "tags": ["Fleet Coordination", "Collision Avoidance", "Stop Scope", "Communication Fault / Recovery"], "req_ids": ["3-1", "3-2", "3-3"], "requirements": [{"id": "3-1", "source": "출처 3. 2021년 Ocado Erith 물류센터 화재", "requirement_text": "로봇 여러대가 동시에 작업하는 경우 충돌, 작업이 중지되는 상황에 어떤 것을 기준으로 삼아야하는지 기준이 필요하다", "ambiguous_terms": [{"term": "로봇 여러대", "issue": "대수 범위와 기종 구성이 불명확"}, {"term": "동시에 작업", "issue": "동시성 판정 기준과 작업 공간 중첩 정의 없음"}, {"term": "충돌", "issue": "충돌 판정 조건과 감지 기준이 불명확"}, {"term": "작업이 중지되는 상황", "issue": "중지 유발 조건과 대상 범위가 불명확"}, {"term": "기준", "issue": "우선순위 규칙인지 안전 규격인지 대상이 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "로봇 간 우선순위 결정 규칙과 적용 순서"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "충돌 위험 판정 기준(최소 이격거리·간섭영역 정의)"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "중지 후 로봇별 유지 상태 및 재개 시 복귀 지점"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "동일 우선순위 충돌·교착(데드락) 발생 시 처리 방식"}, {"rank": 5, "priority": "P1", "category": "성능", "item": "충돌 감지부터 정지까지 허용 응답시간"}], "revised_requirement": "[다중 로봇 동시 작업 조건]에서 [간섭영역]과 [충돌 위험 판정 기준]을 정의하고, 이에 해당하면 [우선순위 규칙]에 따라 통과 로봇과 [중지 대상 로봇]을 결정해야 한다. 중지된 로봇은 [정의된 유지 상태]를 유지하고, [재개 조건] 충족 시 [복귀 지점]에서 작업을 재개하며 [동일 우선순위·교착 상황]은 [해소 규칙]으로 처리해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "충돌 위험 판정에 사용할 최소 이격거리와 간섭영역은 어떻게 정의하는가?"}, {"rank": 2, "priority": "P0", "question": "로봇 간 우선순위는 어떤 기준과 적용 순서로 결정하는가?"}, {"rank": 3, "priority": "P0", "question": "동일 우선순위 충돌과 교착 상태는 어떤 방식으로 해소하는가?"}, {"rank": 4, "priority": "P0", "question": "중지 후 유지 상태와 재개 시 복귀 지점은 어떻게 정의하는가?"}, {"rank": 5, "priority": "P1", "question": "충돌 감지부터 정지까지 허용 응답시간은 몇 [값]인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "다중 로봇 동시 작업 시 정의된 간섭영역과 충돌 위험 판정 기준이 적용되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "충돌 위험 판정 시 우선순위 규칙에 따라 통과 로봇과 중지 대상 로봇이 결정되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "중지된 로봇이 정의된 유지 상태를 유지하고 자동으로 해제되지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "재개 조건 충족 시에만 정의된 복귀 지점에서 작업이 재개되는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "동일 우선순위 및 교착 상황에서 해소 규칙에 따라 처리되는지 확인"}], "placeholder_links": [-1, 0, 0, 1, 1, 3, 3, 3, 2, 2], "task_category": "Fleet & Handoff", "similar": [{"other_id": "v3-1", "topic": "감지 기준과 허용시간 정의", "er_pairs": [[0, 0], [4, 4]]}], "traceability": {"mi_to_er": [[1], [0], [3], [2], [4]], "ac_to_mi": [[1], [0], [2], [2], [3]], "ac_to_er": [[0], [1], [3], [3], [2]]}}, {"id": "3-2", "source": "출처 3. 2021년 Ocado Erith 물류센터 화재", "requirement_text": "로봇 여러대의 통신이 지연된 경우 통신상태를 확인하고 수동, 자동으로 처리할 수 있어야 한다", "ambiguous_terms": [{"term": "여러대", "issue": "대상 로봇 수와 범위가 정의되지 않음"}, {"term": "통신이 지연된 경우", "issue": "지연 판정 임계시간·측정 기준 없음"}, {"term": "통신상태를 확인", "issue": "확인 항목과 판정 결과 정의 불명확"}, {"term": "수동, 자동으로 처리", "issue": "처리 동작 내용과 모드 전환 기준 불명확"}, {"term": "할 수 있어야 한다", "issue": "주체(시스템/운용자)와 완료 기준 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "통신 지연 판정 임계값과 측정 주기·연속 실패 횟수 기준"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "자동 처리 동작 내용(재연결, 정지, 안전위치 이동 등)과 자동·수동 모드 전환 기준"}, {"rank": 3, "priority": "P0", "category": "상태", "item": "지연 판정 중 및 처리 후 로봇의 유지 상태와 복구 완료 후 재개 조건"}, {"rank": 4, "priority": "P1", "category": "사용자", "item": "수동 처리 주체와 조작 수단(관제 UI/현장 조작기)"}, {"rank": 5, "priority": "P1", "category": "예외", "item": "다수 로봇 동시 지연·통신 완전 두절 시 처리 우선순위"}], "revised_requirement": "시스템은 [관리 대상 로봇군]의 통신 상태를 주기적으로 감시하여 [정의된 지연 판정 기준]에 해당하면 해당 로봇을 [지연 상태]로 판정하고, [자동 처리 동작]을 수행하거나 [권한 사용자]가 [조작 수단]으로 수동 처리할 수 있어야 한다. 처리된 로봇은 [복구 확인 조건]이 충족되기 전까지 안전 상태를 유지하며 자동으로 운전을 재개하지 않아야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "통신 지연 판정 임계값과 측정 주기, 연속 실패 횟수 기준은 무엇인가?"}, {"rank": 2, "priority": "P0", "question": "자동 처리 동작은 재연결, 정지, 안전위치 이동 중 무엇으로 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "자동 처리와 수동 처리의 전환 기준과 우선순위는 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "통신 복구 확인 및 운전 재개 조건은 어떻게 판정하는가?"}, {"rank": 5, "priority": "P1", "question": "다수 로봇 동시 지연 또는 통신 완전 두절 시 처리 순서는 어떻게 정하는가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 지연 판정 기준에 해당하는 로봇이 지연 상태로 판정되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "지연 판정 시 정의된 자동 처리 동작이 수행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "권한 사용자가 지정된 조작 수단으로 수동 처리할 수 있는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "처리된 로봇이 복구 확인 조건 충족 전까지 자동으로 운전을 재개하지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "다수 로봇이 동시에 지연된 경우에도 각 로봇이 정의된 순서로 처리되는지 확인"}], "placeholder_links": [-1, 0, -1, 1, -1, -1, 3], "task_category": "Fleet & Handoff", "similar": [], "traceability": {"mi_to_er": [[0], [1, 2], [3], [], [4]], "ac_to_mi": [[0], [1], [3], [2], [4]], "ac_to_er": [[0], [1], [2], [3], [4]]}}, {"id": "3-3", "source": "출처 3. 2021년 Ocado Erith 물류센터 화재", "requirement_text": "사고가 발생한 경우 로봇 작업 전체를 중지시키거나, 사고난 로봇만 중지시키는 기능이 필요하다", "ambiguous_terms": [{"term": "사고", "issue": "사고 판정 기준·감지 조건이 정의되지 않음"}, {"term": "로봇 작업 전체", "issue": "중지 대상 범위(라인/셀/전체 시스템)가 불명확"}, {"term": "사고난 로봇", "issue": "개별 로봇 식별 방법이 불명확"}, {"term": "중지", "issue": "정지 유형(즉시/정상 정지)과 완료 상태가 불명확"}, {"term": "기능", "issue": "자동 동작인지 수동 조작인지, 판단 주체 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "전체 중지와 개별 로봇 중지의 선택 기준(사고 등급별 분기 규칙)"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "중지 후 로봇 상태(전원·브레이크·작업물 유지 여부)와 복귀 절차"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "중지 명령 실패·통신 두절·센서 오검지 시 대체 동작"}, {"rank": 4, "priority": "P0", "category": "성능", "item": "사고 감지부터 정지 완료까지 허용 시간 및 정지 거리"}, {"rank": 5, "priority": "P1", "category": "권한", "item": "중지 실행 및 재가동 승인 주체와 권한 등급"}], "revised_requirement": "시스템은 [정의된 사고 조건] 감지 시 [사고 등급별 분기 규칙]에 따라 [전체 중지 범위] 또는 [식별된 개별 로봇]을 [정지 유형]으로 안전 상태로 전환해야 한다. 중지 상태는 자동으로 해제되지 않으며, [재가동 조건과 승인 권한]이 충족된 경우에만 정상 운전으로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "사고 감지 조건과 등급 판정 기준을 무엇으로 정의할 것인가?"}, {"rank": 2, "priority": "P0", "question": "사고 감지부터 정지 완료까지 허용 시간과 정지 거리는 얼마인가?"}, {"rank": 3, "priority": "P0", "question": "중지 명령 실패·통신 두절·센서 오검지 시 대체 동작은 무엇인가?"}, {"rank": 4, "priority": "P1", "question": "정지 유형과 중지 후 전원·브레이크·작업물 유지 상태를 어떻게 할 것인가?"}, {"rank": 5, "priority": "P1", "question": "개별 로봇 식별 및 선택적 중지를 어떤 방식으로 구현할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 사고 조건이 감지되면 대상 로봇이 정의된 안전 상태로 전환되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "사고 등급별 분기 규칙에 따라 전체 중지와 개별 로봇 중지가 구분 적용되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "개별 중지 시 대상 로봇이 정확히 식별되고 비대상 로봇이 영향받지 않는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "중지 상태가 자동으로 해제되지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 재가동 조건과 승인 권한이 충족된 경우에만 정상 운전으로 복귀하는지 확인"}], "placeholder_links": [0, 0, -1, 4, 3, -1], "task_category": "Human Safety", "similar": [{"other_id": "1-1", "topic": "정지 판정·방식·시간 기준", "er_pairs": [[0, 0], [3, 2], [1, 3]]}, {"other_id": "2-2", "topic": "사고 감지 및 정지 대응 기준", "er_pairs": [[0, 0], [1, 3], [3, 2]]}], "traceability": {"mi_to_er": [[0], [3], [2], [1], []], "ac_to_mi": [[0, 3], [0], [], [1], [4]], "ac_to_er": [[0, 1], [0], [4], [], []]}}]}, {"case_type": "risk", "id": "starship-pedestrian", "source_prefix": "출처 4.", "title": "Starship 배달로봇 보행자 충돌", "date_label": "2026.07.30", "news_outlet": "FOX 10 Phoenix", "news_date": "2026.07.30", "news_url": "https://www.fox10phoenix.com/news/delivery-robot-disaster-asu-worker-says-food-delivering-rover-ran-her-down-campus-new-lawsuit", "summary": "로봇이 방향을 갑자기 바꾸며 보행자를 넘어뜨린 뒤, 쓰러진 사람 쪽으로 다시 후진 (미국 애리조나주립대 관련 보도).", "case_tag": "보행자 충돌 · 후진 재접근", "core_point": "보행자와 충돌한 뒤 로봇이 다시 접근한 사례를 기반으로, 측·후방 감지와 이동 재개 조건을 검토했습니다.", "tags": ["Human Detection", "Rear/Side Sensing", "Re-scan Before Move", "Speed / Stop Control"], "req_ids": ["4-1", "4-2", "4-3"], "requirements": [{"id": "4-1", "source": "출처 4. Starship 배달로봇 보행자 충돌 사고 (미국 애리조나주립대, 404 Media 보도)", "requirement_text": "로봇은 사람이 접근가능한 위치에 있는 경우 속도를 늦추거나 멈출 수 있어야 한다", "ambiguous_terms": [{"term": "사람이 접근가능한 위치", "issue": "거리·영역 기준과 판정 방법이 정의되지 않음"}, {"term": "접근가능한", "issue": "실제 접근인지 잠재적 접근 가능성인지 불명확"}, {"term": "속도를 늦추거나", "issue": "감속 목표 속도와 감속률 기준 없음"}, {"term": "멈출 수 있어야 한다", "issue": "정지 종류(정지 범주)와 정지 시간 기준 불명확"}, {"term": "늦추거나 멈출", "issue": "둘 중 선택 조건이 불명확해 검증 기준 성립 안 됨"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "사람 감지 영역 구분(경고영역/정지영역)과 각 영역의 거리 임계값"}, {"rank": 2, "priority": "P0", "category": "조건", "item": "감속과 정지의 선택 기준(거리·상대속도별 전환 조건)"}, {"rank": 3, "priority": "P0", "category": "성능", "item": "감지부터 감속·정지 완료까지 허용 응답시간 및 정지거리"}, {"rank": 4, "priority": "P0", "category": "예외", "item": "센서 고장·감지 실패·오감지 시의 동작(페일세이프)"}, {"rank": 5, "priority": "P1", "category": "상태", "item": "사람 이탈 후 정상속도 복귀 조건 및 복귀 주체"}], "revised_requirement": "로봇은 [정의된 사람 감지 영역]에서 사람이 감지되면 해당 영역 기준에 따라 [제한 속도]로 감속하거나 [정지 방식]으로 정지해야 한다. 감지 기능이 상실된 경우 로봇은 안전 상태를 유지해야 하며, 사람 이탈 후에는 [복귀 조건과 주체]가 충족된 경우에만 정상 속도로 복귀해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "경고영역과 정지영역의 거리 임계값은 각각 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "감속과 정지를 구분하는 전환 조건은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "감지부터 감속·정지 완료까지 허용 응답시간과 정지거리는 얼마인가?"}, {"rank": 4, "priority": "P0", "question": "센서 고장·오감지 시 페일세이프 동작은 무엇으로 할 것인가?"}, {"rank": 5, "priority": "P1", "question": "감속 시 제한 속도와 정지 범주는 무엇으로 할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 감지 영역에서 사람이 감지되면 해당 영역 기준에 따라 감속 또는 정지가 수행되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "감지 시점부터 감속·정지 완료까지 확정된 응답시간과 정지거리 기준을 충족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "감지 기능이 상실되거나 오감지된 경우 로봇이 정의된 안전 상태를 유지하는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "사람이 이탈하더라도 정상 속도로 자동 복귀하지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 복귀 조건과 승인 주체가 충족된 경우에만 정상 속도로 복귀하는지 확인"}], "placeholder_links": [0, 4, 4, -1], "task_category": "Human Safety", "similar": [{"other_id": "1-1", "topic": "정지 응답시간 및 페일세이프 동작", "er_pairs": [[2, 3], [3, 4]]}, {"other_id": "1-2", "topic": "위험 감지 시 거동 결정", "er_pairs": [[1, 2], [3, 3]]}], "traceability": {"mi_to_er": [[0], [1], [2], [3], []], "ac_to_mi": [[0, 1], [2], [3], [4], [4]], "ac_to_er": [[0, 1, 4], [2], [3], [], []]}}, {"id": "4-2", "source": "출처 4. Starship 배달로봇 보행자 충돌 사고 (미국 애리조나주립대, 404 Media 보도)", "requirement_text": "로봇은 좌우뒤에 어느 위치, 거리에 보행자, 물건이 있다는 것을 파악할 수 있어야 한다", "ambiguous_terms": [{"term": "좌우뒤", "issue": "각도 범위와 기준 좌표계가 정의되지 않음"}, {"term": "어느 위치, 거리", "issue": "측정 범위·분해능·정확도 기준 없음"}, {"term": "보행자, 물건", "issue": "검출 대상의 크기·종류·최소 식별 조건 불명확"}, {"term": "파악할 수 있어야 한다", "issue": "검출률·응답시간 등 성공 판정 기준 없음"}, {"term": "있다는 것", "issue": "존재 판단만인지 추적·분류까지인지 불명확"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "검출 대상 최소 크기·형상·재질(반사특성) 및 최소 식별 조건"}, {"rank": 2, "priority": "P0", "category": "성능", "item": "검출 거리·각도 정확도, 검출률/오탐률, 갱신주기 및 최대 검출 지연시간"}, {"rank": 3, "priority": "P0", "category": "조건", "item": "보장 운용 환경(조도, 우천·먼지, 실내외, 노면 조건) 범위"}, {"rank": 4, "priority": "P1", "category": "예외", "item": "센서 가림·오염·고장·사각지대 발생 시 판정 및 축퇴 동작"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "검출 성공 판정 시험 시나리오와 합격 기준(대상 배치·속도 조합)"}], "revised_requirement": "로봇은 [정의된 후방·측방 감지 영역] 내에서 [검출 대상 정의(보행자·장애물의 최소 크기·형상 조건)]의 존재와 상대 위치·거리를 [갱신주기] 이내로 검출할 수 있어야 한다. 검출 성능은 [보장 운용 환경] 범위에서 [검출률·정확도 기준]을 만족해야 하며, [센서 가림·고장 조건] 발생 시 검출 불가 상태로 판정하고 [축퇴 동작]을 수행해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "감지 영역의 각도 범위와 기준 좌표계를 어떻게 정의할 것인가?"}, {"rank": 2, "priority": "P0", "question": "검출 대상의 최소 크기·반사특성 조건은 무엇인가?"}, {"rank": 3, "priority": "P0", "question": "검출 거리·각도 정확도, 검출률·오탐률 기준값은 얼마인가?"}, {"rank": 4, "priority": "P0", "question": "갱신주기와 최대 허용 검출 지연시간은 얼마인가?"}, {"rank": 5, "priority": "P1", "question": "센서 가림·오염·고장 및 사각지대를 어떻게 판정하고 축퇴 동작을 정의할 것인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "정의된 후방·측방 감지 영역 내에서 검출 대상의 존재가 검출되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "검출 대상의 상대 위치와 거리가 정해진 정확도 기준을 만족하는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "검출 정보가 정의된 갱신주기 이내로 제공되는지 확인"}, {"rank": 4, "priority": "P1", "criterion": "보장 운용 환경 범위에서 검출률·오탐률 기준을 충족하는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "센서 가림·고장 발생 시 검출 불가 상태로 판정하고 정의된 축퇴 동작을 수행하는지 확인"}], "placeholder_links": [0, 1, 3, -1, 2, 4, 4], "task_category": "Human Safety", "similar": [{"other_id": "1-3", "topic": "인식 정확도 및 예외 처리 기준", "er_pairs": [[2, 0], [4, 4]]}], "traceability": {"mi_to_er": [[1], [2, 3], [], [4], []], "ac_to_mi": [[0], [1], [1], [2], [3]], "ac_to_er": [[0, 1], [2], [3], [2], [4]]}}, {"id": "4-3", "source": "출처 4. Starship 배달로봇 보행자 충돌 사고 (미국 애리조나주립대, 404 Media 보도)", "requirement_text": "좌우뒤 이동을 하는 경우 주변을 충돌을 방지하기 위해 주변을 다시 감지해야 한다", "ambiguous_terms": [{"term": "좌우뒤 이동", "issue": "대상 이동 동작 정의·개시 시점 불명확"}, {"term": "주변", "issue": "감지 범위·거리·각도 미정의"}, {"term": "충돌", "issue": "충돌 판정 대상과 기준이 불명확"}, {"term": "다시 감지", "issue": "재감지 주기·시점·완료 기준 불명확"}, {"term": "방지하기 위해", "issue": "감지 후 대응 동작(정지·경고 등) 미정의"}], "missing_items": [{"rank": 1, "priority": "P0", "category": "조건", "item": "재감지 트리거 시점(이동 개시 전/이동 중)과 반복 주기"}, {"rank": 2, "priority": "P0", "category": "상태", "item": "장애물 검출 시 대응 동작(감속·정지·회피) 및 이동 재개 조건"}, {"rank": 3, "priority": "P0", "category": "예외", "item": "센서 고장·사각지대·감지 불가 시 처리 방식"}, {"rank": 4, "priority": "P1", "category": "성능", "item": "감지부터 정지까지 응답시간 및 확보 최소 안전거리"}, {"rank": 5, "priority": "P1", "category": "검증기준", "item": "충돌 방지 성공 판정 기준과 시험 시나리오"}], "revised_requirement": "시스템은 [좌·우·후방 이동 동작]의 개시 전 및 이동 중 [정의된 재감지 주기]로 [정의된 감지 영역] 내 [충돌 판정 대상]을 재감지해야 한다. 장애물이 검출되면 [정의된 대응 동작]을 수행하고, [이동 재개 조건]이 충족된 경우에만 이동을 재개해야 한다.", "engineering_review_required": [{"rank": 1, "priority": "P0", "question": "이동 방향별 감지 영역의 거리와 각도는 얼마인가?"}, {"rank": 2, "priority": "P0", "question": "재감지 주기와 트리거 시점은 어떻게 정의하는가?"}, {"rank": 3, "priority": "P0", "question": "센서 고장·사각지대 발생 시 이동을 어떻게 처리할 것인가?"}, {"rank": 4, "priority": "P1", "question": "장애물 검출 시 대응은 감속·정지·회피 중 무엇인가?"}, {"rank": 5, "priority": "P1", "question": "감지부터 정지까지 허용 응답시간과 최소 안전거리는 얼마인가?"}], "acceptance_criteria": [{"rank": 1, "priority": "P0", "criterion": "좌·우·후방 이동 개시 전에 정의된 감지 영역에 대한 재감지가 수행되는지 확인"}, {"rank": 2, "priority": "P0", "criterion": "이동 중 정의된 재감지 주기로 재감지가 지속 수행되는지 확인"}, {"rank": 3, "priority": "P0", "criterion": "감지 영역 내 충돌 판정 대상 검출 시 정의된 대응 동작이 수행되는지 확인"}, {"rank": 4, "priority": "P0", "criterion": "센서 고장 또는 감지 불가 상태에서 이동이 허용되지 않는지 확인"}, {"rank": 5, "priority": "P1", "criterion": "정의된 이동 재개 조건을 충족한 경우에만 이동이 재개되는지 확인"}], "placeholder_links": [-1, 1, 0, -1, 3, -1], "task_category": "Human Safety", "similar": [{"other_id": "1-1", "topic": "이상상황 대응 방식 및 허용시간", "er_pairs": [[3, 2], [4, 3], [2, 4]]}, {"other_id": "1-2", "topic": "충돌 회피 대응 및 안전거리 기준", "er_pairs": [[3, 2], [2, 3], [4, 4]]}], "traceability": {"mi_to_er": [[1], [3], [2], [4], [0]], "ac_to_mi": [[0], [0], [1], [2], [1]], "ac_to_er": [[1], [1], [3], [2], [3]]}}]}]}</script>
 <script>
 (function () {
   "use strict";
@@ -242,18 +334,6 @@
   function badge(priority) {
     var cls = 'badge-' + String(priority || 'p2').toLowerCase();
     return '<span class="badge ' + cls + '">' + esc(PRIORITY_LABEL[priority] || priority) + '</span>';
-  }
-
-  var TOKEN_RE = /\[값\]\[참조: ([^\]]*)\]\((\d+)\)|\[값\]|\[([^\]]+)\]/g;
-  function renderReqText(text) {
-    var escaped = esc(text);
-    return escaped.replace(TOKEN_RE, function (match, refText, refNum, other) {
-      if (refText !== undefined) {
-        return '<span class="ph ph-value" title="참조: ' + refText.replace(/"/g, '&quot;') + '">[값]</span><sup class="ref-tag">(' + refNum + ')</sup>';
-      }
-      if (match === '[값]') return '<span class="ph ph-value">[값]</span>';
-      return '<span class="ph ph-generic">[' + other + ']</span>';
-    });
   }
 
   function sortByRank(list) {
@@ -279,8 +359,8 @@
   function doneIconSvg() {
     return (
       '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex:none" aria-hidden="true">' +
-        '<circle cx="7" cy="7" r="7" fill="#ffffff"/>' +
-        '<path d="M4 7.3L6.1 9.4L10.2 4.9" stroke="#6b7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<circle cx="7" cy="7" r="7" fill="#4ad991"/>' +
+        '<path d="M4 7.3L6.1 9.4L10.2 4.9" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
       '</svg>'
     );
   }
@@ -303,7 +383,7 @@
   }
 
   function renderHome() {
-    var flowSteps = ['도입 사례', '가상 요구사항', 'AI 품질검토', '수정 요구사항', 'Acceptance Criteria'];
+    var flowSteps = ['현장 사례', '가상 요구사항', 'AI 검토안 · AC 초안', '사람 검토 · 결정', '최종 요구사항 · AC'];
     var flowHtml = flowSteps.map(function (s, i) {
       return '<span class="flow-step">' + esc(s) + '</span>' + (i < flowSteps.length - 1 ? '<span class="flow-arrow">&rarr;</span>' : '');
     }).join('');
@@ -318,17 +398,89 @@
       '</div>' +
       '<div class="hero">' +
         '<p class="eyebrow">AI Proof of Concept</p>' +
-        '<h1>실제 로봇 도입 사례로 보는 요구사항 품질 게이트</h1>' +
-        '<p class="lede">실제 로봇 도입 사례를 가상 요구사항으로 전환하고, 개발 전에 요구사항의 모호성·누락·검증 필요 항목을 점검하는 AI PoC입니다.</p>' +
+        '<h1>실제 로봇 현장 사례로 보는 요구사항 품질 게이트</h1>' +
+        '<p class="lede">실제 로봇 현장 사례를 가상 요구사항으로 전환하고, 개발 전에 요구사항의 모호성·누락·검증 필요 항목을 점검하는 AI PoC입니다.</p>' +
         '<div class="flow">' + flowHtml + '</div>' +
-        '<p class="principle">AI는 기술 수치를 임의로 생성하지 않으며, 확정되지 않은 기술값은 <code>Engineering Review Required</code>로 표시해 별도 검토가 필요하도록 구분합니다.</p>' +
+        '<p class="principle">AI는 기술 수치를 임의로 생성하지 않으며, 확정되지 않은 기술값은 <code>Engineering Review Required</code>로 표시해 별도 검토가 필요하도록 구분합니다. AI 결과는 확정안이 아닌 검토 후보이며, 엔지니어가 채택·제외하고 값을 확정합니다.</p>' +
+        '<p class="matrix-link"><button class="btn" data-action="go-matrix">요구사항 추적 매트릭스 보기 &rarr;</button></p>' +
       '</div>' +
       '<p class="section-title">도입·운영 사례 — Value Case</p>' +
       '<p class="section-sub">실제 로봇 도입·운영 사례에서 수행 업무를 요구사항으로 전환하고, 구현 전에 추가로 정의해야 할 조건을 점검합니다.</p>' +
       '<div class="card-grid">' + valueCases.map(caseCardHtml).join('') + '</div>' +
       '<p class="section-title" style="margin-top:32px">Risk Case</p>' +
       '<p class="section-sub">실제 사고 사례를 기반으로, 유사 사고 예방을 위해 요구사항 단계에서 확인해야 할 조건을 점검합니다.</p>' +
-      '<div class="card-grid">' + riskCases.map(caseCardHtml).join('') + '</div>';
+      '<div class="card-grid">' + riskCases.map(caseCardHtml).join('') + '</div>' +
+      roadmapHtml();
+  }
+
+  // ---------- TRACEABILITY MATRIX (all requirements) ----------
+  function renderMatrix() {
+    var totals = { req: 0, mi: 0, er: 0, erDone: 0, ac: 0, warn: 0 };
+    var rows = DATA.cases.map(function (c) {
+      return c.requirements.map(function (r) {
+        var s = reviewStats(r), cov = traceCoverage(r);
+        var warn = cov.acOrphans.length + cov.miNoAc.length;
+        totals.req++; totals.mi += (r.missing_items || []).length; totals.er += s.erTotal; totals.erDone += s.erDone;
+        totals.ac += (r.acceptance_criteria || []).length; totals.warn += warn;
+        return (
+          '<tr class="row-link" data-action="open-case" data-case-id="' + c.id + '">' +
+            '<td><span class="cell-item">' + esc(r.id) + '</span><span class="case-type-badge case-type-' + c.case_type + '">' + CASE_TYPE_LABEL[c.case_type] + '</span></td>' +
+            '<td><span class="m-title">&ldquo;' + esc(r.requirement_text) + '&rdquo;</span><br><span class="m-case">' + esc(c.title) + '</span></td>' +
+            '<td class="num">' + (r.missing_items || []).length + '</td>' +
+            '<td class="num">' + s.erDone + ' / ' + s.erTotal + '</td>' +
+            '<td class="num">' + (r.acceptance_criteria || []).length + '</td>' +
+            '<td class="num">' + (s.confirmed ? '<span class="tr-state st-closed">ER 완료</span>' : '<span class="tr-state st-open">ER 미확정 ' + (s.erTotal - s.erDone) + ' · 값 미입력 ' + (s.phTotal - s.phFilled) + '</span>') + '</td>' +
+            '<td class="num">' + (warn ? '<span class="tr-warn">⚠ ' + warn + '</span>' : '<span class="trace-ok">정상</span>') + '</td>' +
+          '</tr>'
+        );
+      }).join('');
+    }).join('');
+
+    app.innerHTML =
+      '<div class="topnav"><div class="brand" data-action="go-home"><span class="brand-mark">Requirements Quality Gate</span></div><div class="nav-actions"></div></div>' +
+      '<button class="btn btn-back" data-action="go-home">&larr; 전체 사례로</button>' +
+      '<div class="hero">' +
+        '<p class="eyebrow">Traceability</p>' +
+        '<h1>요구사항 추적 매트릭스</h1>' +
+        '<p class="lede">사례에서 도출한 요구사항 ' + totals.req + '건을 한 화면에서 봅니다. 행을 누르면 해당 사례의 누락 조건 → Engineering Review → AC 연결을 볼 수 있습니다.</p>' +
+      '</div>' +
+      '<div class="table-wrap"><table class="trace matrix"><thead><tr>' +
+        '<th>ID</th><th>요구사항</th><th class="num">누락 조건</th><th class="num">ER 확정</th><th class="num">AC</th><th class="num">검토 상태</th><th class="num">추적 점검</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<p class="stage-note">합계: 누락 조건 ' + totals.mi + '건 · Engineering Review ' + totals.erDone + ' / ' + totals.er + ' 확정 · AC ' + totals.ac + '건 · 추적 점검 필요 ' + totals.warn + '건. 항목 간 연결은 AI가 제안한 것이며 검토자가 확인해야 합니다.</p>' +
+      footerNote();
+    window.scrollTo({ top: 0 });
+  }
+
+  function roadmapHtml() {
+    function col(cls, chip, title, items) {
+      return '<div class="roadmap-col"><span class="stage-chip ' + cls + '">' + chip + '</span><h3>' + title + '</h3>' +
+        '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }
+    return (
+      '<p class="section-title" style="margin-top:32px">구현 범위와 확장 방향</p>' +
+      '<p class="section-sub">현재 PoC에 구현된 기능과 향후 확장 계획을 구분해 표시합니다.</p>' +
+      '<div class="roadmap">' +
+        col('stage-now', '현재 구현', 'AI Quality Gate + 사람 검토', [
+          '4단계 분석: 모호 표현 · 누락 조건 · 수정 요구사항 · Acceptance Criteria',
+          'P0/P1 우선순위, 미확정 기술값은 [값]으로 분리',
+          'Engineering Review 상태 관리 (미확정 → 검토 중 → 확정 / 범위 제외)',
+          '결정값 입력 시 수정 요구사항에 즉시 반영',
+          'AI 제안 항목별 채택 · 제외 (입력 내용은 이 브라우저에만 저장)',
+          'Traceability: 누락 조건 → Engineering Review → AC 연결, 미연결 항목 점검, 전체 요구사항 추적 매트릭스',
+          'PoC 내 유사 검토 사례: 업무 분류가 같고 ER 질문이 대응되는 다른 사례의 ER 질문 · 확정값 참조 (AI 검증 후 2쌍 이상일 때만 표시)'
+        ]) +
+        col('stage-next', '다음 단계', '실제 이력 축적', [
+          '프로젝트별 검토 이력 저장 (현재는 브라우저 저장)',
+          '유사 요구사항 조회를 PoC 사례 → 조직의 과거 요구사항으로 확대'
+        ]) +
+        col('stage-future', '향후 확장', '조직 요구사항 자산화', [
+          '검토 이력 저장 및 다음 프로젝트에서 재사용',
+          '공식 문서 기반 검토 근거 연결',
+          '요구사항 변경 시 영향 범위 분석'
+        ]) +
+      '</div>'
+    );
   }
 
   // ---------- CASE DETAIL ----------
@@ -346,34 +498,313 @@
     );
   }
 
+  // ---------- REVIEW CLOSURE (human-in-the-loop) ----------
+  // AI output is a set of candidates: the viewer adopts/excludes items, resolves each Engineering
+  // Review question, and enters decided values, which replace the matching [placeholder] in the
+  // revised requirement. Stored per viewer in this browser only (a demo, not shared records).
+  var REVIEW_KEY = 'rqg-review-v1';
+  var review = {};
+  try { review = JSON.parse(localStorage.getItem(REVIEW_KEY) || '{}') || {}; } catch (e) { review = {}; }
+  function saveReview() { try { localStorage.setItem(REVIEW_KEY, JSON.stringify(review)); } catch (e) {} }
+
+  var ER_STATUS = [
+    { key: 'open', label: '미확정' },
+    { key: 'review', label: '검토 중' },
+    { key: 'closed', label: '확정' },
+    { key: 'out', label: '범위 제외' }
+  ];
+  var REQ_INDEX = {};
+  DATA.cases.forEach(function (c) {
+    c.requirements.forEach(function (r) { REQ_INDEX[r.id] = { req: r, caseType: c.case_type, caseId: c.id, caseTitle: c.title }; });
+  });
+
+  var PH_RE = /\[[^\]]+\]/g;
+  function placeholders(req) { return String(req.revised_requirement || '').match(PH_RE) || []; }
+  function erStatus(rid, i) { return review[rid + '|er|' + i] || 'open'; }
+  function phValue(rid, i) { return String(review[rid + '|ph|' + i] || '').trim(); }
+  function decision(rid, kind, i) { return review[rid + '|' + kind + '|' + i] || ''; }
+
+  // A [placeholder] tied to an Engineering Review question marked 범위 제외 is N/A: it no longer blocks
+  // the requirement from being confirmed, and its bracket is shown as N/A in the After text.
+  function phNA(req, i) {
+    var link = (req.placeholder_links || [])[i];
+    return typeof link === 'number' && link >= 0 && erStatus(req.id, link) === 'out';
+  }
+
+  function reviewStats(req) {
+    var rid = req.id;
+    var eng = req.engineering_review_required || [];
+    var phs = placeholders(req);
+    var s = { erTotal: eng.length, erDone: 0, phTotal: 0, phFilled: 0, phNA: 0, mi: { adopt: 0, exclude: 0 }, ac: { adopt: 0, exclude: 0 } };
+    eng.forEach(function (_, i) { var st = erStatus(rid, i); if (st === 'closed' || st === 'out') s.erDone++; });
+    phs.forEach(function (_, i) {
+      if (phNA(req, i)) { s.phNA++; return; }
+      s.phTotal++;
+      if (phValue(rid, i)) s.phFilled++;
+    });
+    (req.missing_items || []).forEach(function (_, i) { var d = decision(rid, 'mi', i); if (d) s.mi[d]++; });
+    (req.acceptance_criteria || []).forEach(function (_, i) { var d = decision(rid, 'ac', i); if (d) s.ac[d]++; });
+    s.confirmed = s.erDone === s.erTotal && s.phFilled === s.phTotal;
+    return s;
+  }
+
+  function renderRevised(req) {
+    var rid = req.id, links = req.placeholder_links || [], i = -1;
+    return esc(req.revised_requirement || '').replace(PH_RE, function (m) {
+      i++;
+      if (phNA(req, i)) return '<span class="ph ph-na" title="' + m.replace(/"/g, '&quot;') + ' — 범위 제외">N/A</span>';
+      var v = phValue(rid, i);
+      if (!v) return '<span class="ph ph-value">' + m + '</span>';
+      var link = links[i];
+      var closed = (typeof link === 'number' && link >= 0) ? erStatus(rid, link) === 'closed' : true;
+      return '<span class="ph ' + (closed ? 'ph-filled' : 'ph-draft') + '" title="' + m.replace(/"/g, '&quot;') + '">' + esc(v) + '</span>';
+    });
+  }
+
+  function afterInner(req) {
+    var s = reviewStats(req);
+    var state = s.confirmed
+      ? '<span class="after-state done">ER 완료</span>'
+      : '<span class="after-state open">미정 ' + (s.phTotal - s.phFilled) + '개</span>';
+    var label = s.confirmed ? 'After (Engineering Review 반영안)' : 'After (수정된 요구사항)';
+    return '<span class="ba-label">' + label + state + '</span>' + renderRevised(req);
+  }
+
+  function chipHtml(req) {
+    var s = reviewStats(req);
+    return '<span class="req-progress' + (s.confirmed ? ' done' : '') + '" data-chip="' + escAttr(req.id) + '">' +
+      (s.confirmed ? 'ER 완료' : '검토 ' + s.erDone + '/' + s.erTotal) + '</span>';
+  }
+
+  function barInner(req) {
+    var s = reviewStats(req);
+    return (
+      '<span>ER 확정 <b>' + s.erDone + '/' + s.erTotal + '</b></span>' +
+      '<span>미정 값 입력 <b>' + s.phFilled + '/' + s.phTotal + '</b></span>' +
+      '<span>누락 조건 채택 <b>' + s.mi.adopt + '</b> · 제외 <b>' + s.mi.exclude + '</b></span>' +
+      '<button class="btn" data-action="review-reset" data-rid="' + escAttr(req.id) + '">검토 초기화</button>'
+    );
+  }
+
+  function idChip(prefix, i) { return '<span class="tr-id">' + prefix + '-' + (i + 1) + '</span>'; }
+
+  // Coverage over the AI-proposed links (indices follow rank order = display order).
+  function traceCoverage(req) {
+    var t = req.traceability || { mi_to_er: [], ac_to_mi: [], ac_to_er: [] };
+    var nMi = (req.missing_items || []).length;
+    var acByMi = [], i;
+    for (i = 0; i < nMi; i++) acByMi.push([]);
+    var acOrphans = [];
+    // Items the reviewer excluded (제외) drop out of the coverage check on both sides.
+    (t.ac_to_mi || []).forEach(function (mis, a) {
+      if (decision(req.id, 'ac', a) === 'exclude') return;
+      if (!mis.length) acOrphans.push(a);
+      mis.forEach(function (m) { if (acByMi[m]) acByMi[m].push(a); });
+    });
+    var miNoAc = [];
+    acByMi.forEach(function (list, m) {
+      if (!list.length && decision(req.id, 'mi', m) !== 'exclude') miNoAc.push(m);
+    });
+    return { acByMi: acByMi, acOrphans: acOrphans, miNoAc: miNoAc };
+  }
+
+  function decideHtml(rid, kind, i) {
+    var d = decision(rid, kind, i);
+    function b(val, text) {
+      return '<button type="button" class="d-' + val + '" aria-pressed="' + (d === val) + '" data-action="decide" data-rid="' + escAttr(rid) +
+        '" data-kind="' + kind + '" data-idx="' + i + '" data-val="' + val + '">' + text + '</button>';
+    }
+    return '<span class="decide">' + b('adopt', '채택') + b('exclude', '제외') + '</span>';
+  }
+
+  function patchReview(rid) {
+    var entry = REQ_INDEX[rid];
+    if (!entry) return;
+    var sel = '[data-rid="' + rid + '"]';
+    var after = document.querySelector('.ba-after' + sel);
+    if (after) after.innerHTML = afterInner(entry.req);
+    var bar = document.querySelector('.review-bar' + sel);
+    if (bar) bar.innerHTML = barInner(entry.req);
+    var chip = document.querySelector('[data-chip="' + rid + '"]');
+    if (chip) chip.outerHTML = chipHtml(entry.req);
+  }
+
+  function rerenderReview(rid) {
+    var entry = REQ_INDEX[rid];
+    var body = document.querySelector('.req-body[data-rid="' + rid + '"]');
+    if (!entry || !body) return;
+    var prev = body.querySelector('.more-details');
+    var wasOpen = !!(prev && prev.open);
+    body.innerHTML = reqBodyInner(entry.req, entry.caseType);
+    if (wasOpen) { var next = body.querySelector('.more-details'); if (next) next.open = true; }
+    patchReview(rid);
+  }
+
   function requirementBlockHtml(req, idx, total, caseType) {
+    return (
+      '<details class="req-block"' + (idx === 0 ? ' open' : '') + '>' +
+        '<summary>' +
+          '<span><span class="req-num">REQ ' + (idx + 1) + ' / ' + total + ' &middot; ' + esc(req.id) + '</span>' + chipHtml(req) +
+          '<p class="req-title">&ldquo;' + esc(req.requirement_text) + '&rdquo;</p></span>' +
+          '<span class="req-caret">&#9656;</span>' +
+        '</summary>' +
+        '<div class="req-body" data-rid="' + escAttr(req.id) + '">' + reqBodyInner(req, caseType) + '</div>' +
+      '</details>'
+    );
+  }
+
+  function reqBodyInner(req, caseType) {
+    var rid = req.id;
     var missing = sortByRank(req.missing_items);
     var eng = sortByRank(req.engineering_review_required);
     var ac = sortByRank(req.acceptance_criteria);
+    var phs = placeholders(req);
+    var links = req.placeholder_links || [];
 
     function missingHtml() {
       if (!missing.length) return '<p class="empty">해당 없음</p>';
-      return '<ul>' + missing.map(function (m) {
-        return '<li>' + badge(m.priority) + ' [' + esc(m.category) + '] ' + esc(m.item) + '</li>';
+      return '<ul class="review-list">' + missing.map(function (m, i) {
+        var d = decision(rid, 'mi', i);
+        return '<li class="' + (d === 'exclude' ? 'is-excluded' : '') + '"><span class="item-text">' + idChip('MI', i) + badge(m.priority) + ' [' + esc(m.category) + '] ' + esc(m.item) + '</span>' +
+          decideHtml(rid, 'mi', i) + '</li>';
       }).join('') + '</ul>';
+    }
+    function phFieldHtml(i) {
+      var na = phNA(req, i);
+      return '<span class="ph ' + (na ? 'ph-na' : 'ph-value') + '">' + esc(phs[i]) + '</span>' +
+        '<input class="ph-input" type="text" data-rid="' + escAttr(rid) + '" data-ph="' + i + '" value="' + escAttr(na ? '' : phValue(rid, i)) + '"' +
+        (na ? ' disabled placeholder="범위 제외 — N/A"' : ' placeholder="결정값 입력"') + ' aria-label="' + escAttr(phs[i]) + ' 결정값">';
     }
     function engHtml() {
       if (!eng.length) return '<p class="empty">해당 없음</p>';
-      return '<ul>' + eng.map(function (e) {
-        return '<li>' + badge(e.priority) + ' ' + esc(e.question) + '</li>';
-      }).join('') + '</ul>';
+      var items = eng.map(function (e, i) {
+        var st = erStatus(rid, i);
+        var opts = ER_STATUS.map(function (o) {
+          return '<option value="' + o.key + '"' + (o.key === st ? ' selected' : '') + '>' + o.label + '</option>';
+        }).join('');
+        var fields = [];
+        links.forEach(function (l, p) { if (l === i) fields.push(phFieldHtml(p)); });
+        return (
+          '<div class="er-item st-' + st + '">' +
+            '<div class="er-head"><span>' + idChip('ER', i) + badge(e.priority) + ' ' + esc(e.question) + '</span>' +
+              '<select class="er-status st-' + st + '" data-rid="' + escAttr(rid) + '" data-er="' + i + '" aria-label="검토 상태">' + opts + '</select>' +
+            '</div>' +
+            (fields.length ? '<div class="ph-fields">' + fields.join('') + '</div>' : '') +
+          '</div>'
+        );
+      }).join('');
+      var extra = [];
+      phs.forEach(function (_, p) { var l = links[p]; if (!(typeof l === 'number' && l >= 0)) extra.push(phFieldHtml(p)); });
+      var extraHtml = extra.length
+        ? '<p class="er-extra-title">ER 질문 외 추가 결정 항목</p><div class="ph-fields">' + extra.join('') + '</div>'
+        : '';
+      return '<p class="review-note">상태를 정하고 결정값을 입력하면 ③ After에 바로 반영됩니다. 입력 내용은 이 브라우저에만 저장됩니다.</p>' + items + extraHtml;
     }
     function ambiguousHtml() {
       if (!req.ambiguous_terms || !req.ambiguous_terms.length) return '<p class="empty">해당 없음</p>';
       return '<ul>' + req.ambiguous_terms.map(function (t) {
-        return '<li><b class="mono">' + esc(t.term)+ '</b><span class="basis">' + esc(t.issue) + '</span></li>';
+        return '<li><b>' + esc(t.term)+ '</b><span class="basis">' + esc(t.issue) + '</span></li>';
       }).join('') + '</ul>';
     }
-    function acHtml() {
+    function acHtml(withButtons) {
       if (!ac.length) return '<p class="empty">해당 없음</p>';
-      return '<ul class="ac-list">' + ac.map(function (c) {
-        return '<li class="ac-item">' + badge(c.priority) + ' ' + esc(c.criterion) + '</li>';
+      return '<ul class="ac-list">' + ac.map(function (c, i) {
+        var d = decision(rid, 'ac', i);
+        return '<li class="ac-item' + (d === 'exclude' ? ' is-excluded' : '') + '"><span class="item-text">' + idChip('AC', i) + badge(c.priority) + ' ' + esc(c.criterion) + '</span>' +
+          (withButtons ? decideHtml(rid, 'ac', i) : '') + '</li>';
       }).join('') + '</ul>';
+    }
+
+    // Similar requirements from other cases in this PoC. Shows the other item's actual ER questions and,
+    // if this viewer already confirmed them in this browser, the decided values (reuse of past decisions).
+    function similarHtml() {
+      var sims = (req.similar || []).filter(function (s) { return REQ_INDEX[s.other_id]; });
+      var catChip = req.task_category ? '<span class="tag">업무 분류 · ' + esc(req.task_category) + '</span>' : '';
+      if (!sims.length) {
+        if (!req.task_category) return '';
+        return (
+          '<div class="stage">' +
+            '<p class="stage-num">유사 검토 이력</p>' +
+            '<p class="review-note">' + catChip + '</p>' +
+            '<p class="empty">유사 검토 이력 없음 — 같은 업무 분류에서 답을 참고할 수 있는 ER 질문이 2개 이상 대응되는 사례가 이 PoC 데이터에 없습니다.</p>' +
+          '</div>'
+        );
+      }
+      var cards = sims.map(function (s) {
+        var o = REQ_INDEX[s.other_id], oreq = o.req;
+        var oeng = sortByRank(oreq.engineering_review_required);
+        var oplinks = oreq.placeholder_links || [];
+        var oph = placeholders(oreq);
+        var pairs = s.er_pairs.map(function (pr) {
+          var q = oeng[pr[1]], mine = eng[pr[0]];
+          if (!q || !mine) return '';
+          var st = erStatus(oreq.id, pr[1]);
+          var label = ER_STATUS.filter(function (x) { return x.key === st; })[0].label;
+          var vals = [];
+          oplinks.forEach(function (l, p) { if (l === pr[1] && phValue(oreq.id, p)) vals.push(oph[p] + ' → ' + phValue(oreq.id, p)); });
+          return '<li>' + idChip('ER', pr[0]) + '<span class="sim-arrow">↔</span>' + esc(o.caseTitle) + ' ' + idChip('ER', pr[1]) + esc(q.question) +
+            '<span class="tr-state st-' + st + '">' + label + '</span>' +
+            (vals.length ? '<span class="sim-vals">확정값: ' + esc(vals.join(', ')) + '</span>' : '') + '</li>';
+        }).join('');
+        return (
+          '<div class="sim-card">' +
+            '<div class="sim-head"><span class="sim-topic">공통 결정 항목 · ' + esc(s.topic) + '</span>' +
+              '<button class="btn" data-action="open-case" data-case-id="' + escAttr(o.caseId) + '" data-req-id="' + escAttr(oreq.id) + '">' + esc(o.caseTitle) + ' · ' + esc(oreq.id) + ' 보기 &rarr;</button></div>' +
+            '<p class="sim-req">&ldquo;' + esc(oreq.requirement_text) + '&rdquo;</p>' +
+            (pairs ? '<ul class="sim-pairs">' + pairs + '</ul>' : '') +
+          '</div>'
+        );
+      }).join('');
+      return (
+        '<div class="stage">' +
+          '<p class="stage-num">유사 검토 이력 — 다른 사례에서 이미 검토한 요구사항</p>' +
+          '<p class="review-note">' + catChip + ' 같은 업무 분류에서 공통 결정 항목이 2개 이상인 사례를 최대 2건 표시합니다. 별도 이력 DB가 아닌 PoC 분석 데이터 내 유사 사례입니다.</p>' +
+          cards +
+        '</div>'
+      );
+    }
+
+    function traceHtml() {
+      var t = req.traceability;
+      if (!t || !missing.length) return '';
+      var cov = traceCoverage(req);
+      function erCell(idxs) {
+        if (!idxs.length) return '<span class="tr-warn">— 연결된 ER 없음</span>';
+        return idxs.map(function (ei) {
+          var st = erStatus(rid, ei);
+          var label = ER_STATUS.filter(function (o) { return o.key === st; })[0].label;
+          return '<span class="cell-item" title="' + escAttr(eng[ei].question) + '">' + idChip('ER', ei) + esc(eng[ei].question) +
+            '<span class="tr-state st-' + st + '">' + label + '</span></span>';
+        }).join('');
+      }
+      function acCell(idxs) {
+        if (!idxs.length) return '<span class="tr-warn">⚠ 검증하는 AC 없음</span>';
+        return idxs.map(function (ai) {
+          return '<span class="cell-item' + (decision(rid, 'ac', ai) === 'exclude' ? ' is-excluded' : '') + '">' + idChip('AC', ai) + esc(ac[ai].criterion) + '</span>';
+        }).join('');
+      }
+      var rows = missing.map(function (m, i) {
+        var excluded = decision(rid, 'mi', i) === 'exclude';
+        return '<tr>' +
+          '<td><span class="cell-item' + (excluded ? ' is-excluded' : '') + '">' + idChip('MI', i) + badge(m.priority) + ' ' + esc(m.item) + '</span></td>' +
+          '<td>' + erCell(t.mi_to_er[i] || []) + '</td>' +
+          '<td>' + (excluded ? '<span class="tr-state">제외한 조건 — 점검 대상 아님</span>' : acCell(cov.acByMi[i])) + '</td>' +
+        '</tr>';
+      }).join('');
+      var warns = [];
+      cov.acOrphans.forEach(function (ai) { warns.push('AC-' + (ai + 1) + '은 연결된 누락 조건이 없습니다 — 근거 확인이 필요합니다.'); });
+      cov.miNoAc.forEach(function (mi) { warns.push('MI-' + (mi + 1) + '을 검증하는 AC가 없습니다.'); });
+      var foot = warns.length
+        ? '<div class="trace-warns">추적 확인 필요 ' + warns.length + '건<ul>' + warns.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul></div>'
+        : '<p class="trace-ok">모든 누락 조건이 AC로 검증되고, 모든 AC가 누락 조건에 연결되어 있습니다.</p>';
+      return (
+        '<div class="stage">' +
+          '<p class="stage-num">Traceability — 누락 조건 → Engineering Review → AC</p>' +
+          '<div class="table-wrap"><table class="trace"><thead><tr><th>누락 조건</th><th>Engineering Review</th><th>Acceptance Criteria</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+          foot +
+          '<p class="stage-note">※ 연결은 AI가 기존 결과 항목 간 관련성을 판단해 제안한 것이며, 검토자가 확인해야 합니다.</p>' +
+        '</div>'
+      );
     }
 
     var stageOneLabel = caseType === 'value' ? '① 도입 사례 기반 가상 요구사항'
@@ -384,40 +815,38 @@
       : '※ 직접 입력하신 요구사항 문장입니다.';
 
     return (
-      '<details class="req-block"' + (idx === 0 ? ' open' : '') + '>' +
-        '<summary>' +
-          '<span><span class="req-num">REQ ' + (idx + 1) + ' / ' + total + ' &middot; ' + esc(req.id) + '</span>' +
-          '<p class="req-title">&ldquo;' + esc(req.requirement_text) + '&rdquo;</p></span>' +
-          '<span class="req-caret">&#9656;</span>' +
-        '</summary>' +
-        '<div class="req-body">' +
+          '<div class="review-bar" data-rid="' + escAttr(rid) + '">' + barInner(req) + '</div>' +
           '<div class="stage">' +
             '<p class="stage-num">' + stageOneLabel + '</p>' +
             '<div class="virtual-req">&ldquo;' + esc(req.requirement_text) + '&rdquo;</div>' +
             '<p class="stage-note">' + stageOneNote + '</p>' +
           '</div>' +
           '<div class="stage">' +
-            '<p class="stage-num">② AI Quality Gate 결과</p>' +
-            '<div class="subcard-grid">' +
-              '<div class="subcard"><h4>모호한 표현</h4>' + ambiguousHtml() + '</div>' +
-              '<div class="subcard"><h4>누락 조건</h4>' + missingHtml() + '</div>' +
-            '</div>' +
-            '<div class="subcard subcard-full"><h4>Engineering Review — 엔지니어 확인 필요</h4>' + engHtml() + '</div>' +
+            '<p class="stage-num">② AI Quality Gate 결과 — 누락 조건 · Engineering Review</p>' +
+            '<div class="subcard"><h4>누락 조건</h4>' + missingHtml() + '</div>' +
+            '<div class="subcard subcard-full"><h4>Engineering Review — 엔지니어 검토·확정</h4>' + engHtml() + '</div>' +
           '</div>' +
           '<div class="stage">' +
             '<p class="stage-num">③ Before &rarr; After</p>' +
             '<div class="before-after">' +
               '<div class="ba-block ba-before"><span class="ba-label">Before (원본)</span>' + esc(req.requirement_text) + '</div>' +
               '<div class="ba-arrow">&darr;</div>' +
-              '<div class="ba-block ba-after"><span class="ba-label">After (수정된 요구사항)</span>' + renderReqText(req.revised_requirement || '') + '</div>' +
+              '<div class="ba-block ba-after" data-rid="' + escAttr(rid) + '">' + afterInner(req) + '</div>' +
             '</div>' +
           '</div>' +
           '<div class="stage">' +
-            '<p class="stage-num">④ Acceptance Criteria</p>' +
-            acHtml() +
+            '<p class="stage-num">④ Acceptance Criteria (초안)</p>' +
+            acHtml(false) +
           '</div>' +
-        '</div>' +
-      '</details>'
+          '<details class="more-details">' +
+            '<summary>상세 검토 정보 보기 <span class="more-hint">모호한 표현 · AC 개별 검토 · Traceability · 유사 검토 이력</span></summary>' +
+            '<div class="more-body">' +
+              '<div class="stage"><p class="stage-num">모호한 표현</p><div class="subcard">' + ambiguousHtml() + '</div></div>' +
+              '<div class="stage"><p class="stage-num">AC 개별 검토 — 채택 · 제외</p>' + acHtml(true) + '</div>' +
+              traceHtml() +
+              similarHtml() +
+            '</div>' +
+          '</details>'
     );
   }
 
@@ -455,7 +884,7 @@
 
   function footerNote() {
     return (
-      '<footer class="page-note">이 페이지의 모든 분석은 Claude(Opus 5) 기반 4단계 파이프라인(모호성 탐지 → 누락 조건 탐지 → 수정안 생성 → Acceptance Criteria 생성)으로 생성되었으며, 확정되지 않은 기술 수치는 <code class="mono">[값]</code>으로 남기고 임의로 지어내지 않습니다.</footer>'
+      '<footer class="page-note">요구사항 품질 분석은 LLM 기반 4단계 파이프라인(모호성 탐지 → 누락 조건 탐지 → 수정안 생성 → Acceptance Criteria 생성)으로 생성했습니다. 업무 분류와 항목 간 연결은 LLM이 1차 제안하고 검토·보정했으며, 모든 결과는 사람이 검토·확정하도록 설계했습니다. 확정되지 않은 기술 수치는 <code class="mono">[값]</code>으로 남기고 임의로 지어내지 않습니다. 검토 상태·결정값·채택 여부는 서버에 저장되지 않고 이 브라우저에만 남습니다.</footer>'
     );
   }
 
@@ -463,6 +892,7 @@
   function render() {
     if (state.view === 'home') renderHome();
     else if (state.view === 'detail') renderDetail(state.caseId);
+    else if (state.view === 'matrix') renderMatrix();
   }
 
   document.addEventListener('click', function (ev) {
@@ -470,7 +900,44 @@
     if (!el) return;
     var action = el.getAttribute('data-action');
     if (action === 'go-home') { state = { view: 'home', caseId: null }; render(); window.scrollTo({ top: 0 }); }
-    else if (action === 'open-case') { state = { view: 'detail', caseId: el.getAttribute('data-case-id') }; render(); }
+    else if (action === 'go-matrix') { state = { view: 'matrix', caseId: null }; render(); }
+    else if (action === 'open-case') {
+      state = { view: 'detail', caseId: el.getAttribute('data-case-id') }; render();
+      var focusId = el.getAttribute('data-req-id');
+      var target = focusId && document.querySelector('.req-body[data-rid="' + focusId + '"]');
+      if (target) {
+        target.parentNode.open = true;
+        target.parentNode.scrollIntoView();
+      }
+    }
+    else if (action === 'decide') {
+      var key = el.getAttribute('data-rid') + '|' + el.getAttribute('data-kind') + '|' + el.getAttribute('data-idx');
+      var val = el.getAttribute('data-val');
+      if (review[key] === val) delete review[key]; else review[key] = val;
+      saveReview(); rerenderReview(el.getAttribute('data-rid'));
+    }
+    else if (action === 'review-reset') {
+      var rid = el.getAttribute('data-rid');
+      Object.keys(review).forEach(function (k) { if (k.indexOf(rid + '|') === 0) delete review[k]; });
+      saveReview(); rerenderReview(rid);
+    }
+  });
+
+  document.addEventListener('change', function (ev) {
+    var el = ev.target;
+    if (!el.classList || !el.classList.contains('er-status')) return;
+    var rid = el.getAttribute('data-rid');
+    review[rid + '|er|' + el.getAttribute('data-er')] = el.value;
+    saveReview(); rerenderReview(rid);
+  });
+
+  document.addEventListener('input', function (ev) {
+    var el = ev.target;
+    if (!el.classList || !el.classList.contains('ph-input')) return;
+    var rid = el.getAttribute('data-rid');
+    var key = rid + '|ph|' + el.getAttribute('data-ph');
+    if (el.value.trim()) review[key] = el.value; else delete review[key];
+    saveReview(); patchReview(rid);
   });
 
   render();
